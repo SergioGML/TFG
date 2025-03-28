@@ -1,11 +1,11 @@
-import LoginComponent from "../components/Login/LoginComponent"
+import LoginForm from "../components/Auth/LoginForm"
 
 export default function Login() {
 
   
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-violet-950">
-      <LoginComponent/>
+    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-rose-200 to-violet-400 dark:from-violet-900 dark:to-neutral-800">
+      <LoginForm/>
     </div>
   )
 }
