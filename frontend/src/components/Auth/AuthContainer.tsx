@@ -6,7 +6,7 @@ const AuthContainer = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-r from-rose-200 to-violet-400 dark:from-violet-900 dark:to-neutral-800">
+    <div>
       <div
         className="bg-white rounded-2xl px-8 py-10 shadow-xl ring-1 ring-indigo-900/10 w-full max-w-md mx-auto
       dark:bg-violet-700"

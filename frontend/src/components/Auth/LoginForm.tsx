@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 export default function LoginForm() {
   return (
     <>
@@ -15,20 +17,20 @@ export default function LoginForm() {
         <button
           type="submit"
           className="bg-rose-400 hover:bg-rose-600 text-white hover:text-white font-semibold py-3 rounded-md transition-colors
-          dark:bg-amber-400 dark:hover:bg-amber-500 dark:text-white dark:font-black"
+            dark:bg-amber-400 dark:hover:bg-amber-500 dark:text-white dark:font-black"
         >
           Login
         </button>
       </form>
 
       <p className="text-center mt-10 text-sm">
-        <a
-          href="/ResetPassword"
+        <Link
+          to="/NewPassword"
           className="text-rose-500 hover:underline
-        dark:text-yellow-400 dark:hover:text-yellow-300"
+          dark:text-yellow-300 dark:hover:text-yellow-200 text-[1.1rem]"
         >
           ¿Has olvidado tu contraseña?
-        </a>
+        </Link>
       </p>
     </>
   );
