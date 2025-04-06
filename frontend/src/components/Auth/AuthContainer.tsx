@@ -1,17 +1,15 @@
 import { useState } from "react";
 import LoginForm from "./LoginForm";
 import RegisterForm from "./RegisterForm";
+import Modal from "../Modal";
 
 const AuthContainer = () => {
   const [isLogin, setIsLogin] = useState(true);
 
   return (
-    <div>
-      <div
-        className="bg-white rounded-2xl px-8 py-10 shadow-xl ring-1 ring-indigo-900/10 w-full max-w-md mx-auto
-      dark:bg-violet-700"
-      >
-        <div className="grid grid-cols-2 items-center mb-10 gap-2">
+    <Modal>
+      <div>
+        <div className="grid grid-cols-2 items-center mb-8 gap-2">
           {/* Iniciar sesión */}
           <div
             role="button"
@@ -44,11 +42,11 @@ const AuthContainer = () => {
               }
             }}
             className={`rounded-2xl px-4 py-2 text-2xl font-semibold text-center transition-colors cursor-pointer
-      ${
-        !isLogin
-          ? "text-violet-800 dark:text-white"
-          : "text-violet-800 opacity-50 hover:opacity-100 dark:text-white"
-      } 
+              ${
+                !isLogin
+                  ? "text-violet-800 dark:text-white"
+                  : "text-violet-800 opacity-50 hover:opacity-100 dark:text-white"
+              } 
       hover:text-rose-500 hover:dark:text-amber-300`}
           >
             Regístrate
@@ -59,7 +57,7 @@ const AuthContainer = () => {
           {isLogin ? <LoginForm /> : <RegisterForm />}
         </div>
       </div>
-    </div>
+    </Modal>
   );
 };
 

@@ -3,7 +3,10 @@ import Menu from "../DropdownMenu/Menu";
 
 function Header() {
   return (
-    <header className="flex items-center justify-between w-full h-20 px-4 bg-white shadow-md dark:bg-slate-800">
+    <header
+      className="w-full h-15 px-4 flex absolute items-center justify-between
+     bg-white dark:bg-blue-950/80 shadow-inner dark:shadow-gray-500/20 border-t dark:border-gray-700"
+    >
       <div>
         <CurrencyEuroIcon className="w-9 h-9 text-slate-800 dark:text-slate-200" />
       </div>
