@@ -6,10 +6,12 @@ import {
   SparklesIcon,
   ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/react/24/solid";
+import { useAuth } from "../../context/AuthContext";
 
 function Menu() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -24,7 +26,8 @@ function Menu() {
   };
 
   const handleLogout = () => {
-    // Logic to handle logout goes here
+    setIsOpen(false);
+    logout();
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
@@ -68,7 +71,7 @@ function Menu() {
             role="button"
             tabIndex={0}
             onKeyDown={(e) => handleKeyDown(e, handleLogout)}
-            onClick={toggleMenu}
+            onClick={handleLogout}
           >
             <ArrowLeftStartOnRectangleIcon className="w-5" /> Cerrar Sesion
           </div>

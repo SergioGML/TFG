@@ -5,69 +5,82 @@ import {
   SparklesIcon,
   UserIcon,
 } from "@heroicons/react/24/solid";
+import { useNavigate } from "react-router-dom";
 import Button from "../Button";
 import Input from "../Input";
 import { useAuth } from "../../context/AuthContext";
-import { useNavigate } from "react-router-dom";
 
 export default function RegisterForm() {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-
-  const [error, setError] = useState("");
+  const [form, setForm] = useState({ name: "", email: "", password: "" });
+  const [nameError, setNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [submitError, setSubmitError] = useState("");
 
   const handleChange = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
+  const validateEmail = (value: string) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(value) ? "" : "Email no válido";
+  };
+  const validatePassword = (value: string) =>
+    value.length >= 8 ? "" : "La contraseña debe tener al menos 8 caracteres";
+
+  const handleBlurName = (e: React.FocusEvent<HTMLInputElement>) => {
+    setNameError(e.target.value ? "" : "El nombre es obligatorio");
+  };
+  const handleBlurEmail = (e: React.FocusEvent<HTMLInputElement>) => {
+    setEmailError(validateEmail(e.target.value));
+  };
+  const handleBlurPassword = (e: React.FocusEvent<HTMLInputElement>) => {
+    setPasswordError(validatePassword(e.target.value));
+  };
+
   const handleRegister = async (e: React.FormEvent) => {
-    console.log("prueba");
-
     e.preventDefault();
-    setError("");
+    // validaciones previas
+    const nErr = form.name ? "" : "El nombre es obligatorio";
+    const mailErr = validateEmail(form.email);
+    const passErr = validatePassword(form.password);
+    setNameError(nErr);
+    setEmailError(mailErr);
+    setPasswordError(passErr);
+    if (nErr || mailErr || passErr) return;
 
+    setSubmitError("");
     try {
       const res = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-
       const data = await res.json();
-
       if (!res.ok) {
-        setError(data.message || "Error en el registro");
+        setSubmitError(data.message || "Error en el registro");
         return;
       }
-
-      // Login automático
+      // login automático
       const loginRes = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: form.email,
-          password: form.password,
-        }),
+        body: JSON.stringify({ email: form.email, password: form.password }),
       });
-
       const loginData = await loginRes.json();
       if (!loginRes.ok) {
-        setError(
+        setSubmitError(
           loginData.message || "Error al iniciar sesión automáticamente"
         );
         return;
       }
-
       await login(loginData.token);
       navigate("/country");
-    } catch (err) {
-      setError("Error en el servidor");
+    } catch {
+      setSubmitError("Error en el servidor");
     }
   };
 
@@ -79,6 +92,9 @@ export default function RegisterForm() {
         icon={<UserIcon className="w-5 h-5" />}
         value={form.name}
         onChange={(e) => handleChange("name", e.target.value)}
+        onBlur={handleBlurName}
+        error={nameError}
+        required
       />
       <Input
         type="email"
@@ -86,6 +102,9 @@ export default function RegisterForm() {
         icon={<EnvelopeIcon className="w-5 h-5" />}
         value={form.email}
         onChange={(e) => handleChange("email", e.target.value)}
+        onBlur={handleBlurEmail}
+        error={emailError}
+        required
       />
       <Input
         type="password"
@@ -93,9 +112,13 @@ export default function RegisterForm() {
         icon={<KeyIcon className="w-5 h-5" />}
         value={form.password}
         onChange={(e) => handleChange("password", e.target.value)}
+        onBlur={handleBlurPassword}
+        error={passwordError}
+        required
       />
-
-      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+      {submitError && (
+        <p className="text-red-500 text-sm text-center">{submitError}</p>
+      )}
       <div className="flex flex-col items-center gap-2">
         <Button
           text="Crear cuenta"

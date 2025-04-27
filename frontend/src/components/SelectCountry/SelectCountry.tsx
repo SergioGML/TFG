@@ -21,7 +21,7 @@ export default function Country() {
     setError("");
 
     try {
-      const res = await fetch("http://localhost:3000/profile", {
+      const res = await fetch("http://localhost:5000/api/auth/profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export default function Country() {
         return;
       }
 
-      navigate("/profile"); // O la siguiente página de tu app
+      navigate("/dashboard");
     } catch (err) {
       setError("Error al actualizar el país");
     }

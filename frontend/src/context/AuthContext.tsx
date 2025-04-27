@@ -42,21 +42,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const fetchProfile = async (jwt: string) => {
-    try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      });
+    const res = await fetch("http://localhost:5000/api/auth/profile", {
+      method: "GET",
+      headers: { Authorization: `Bearer ${jwt}` },
+    });
 
-      if (!res.ok) throw new Error("No autorizado");
+    if (!res.ok) throw new Error("No autorizado");
 
-      const userData = await res.json();
-      setUser(userData);
-    } catch (error) {
-      console.error("Error al obtener perfil:", error);
-      logout();
-    }
+    const userData = await res.json();
+    setUser(userData);
   };
 
   const login = async (jwt: string) => {

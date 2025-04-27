@@ -11,13 +11,25 @@ import Button from "../components/Button";
 import Input from "../components/Input";
 
 export default function NewPassword() {
-  const [form, setForm] = useState({
-    password: "",
-    repeatPassword: "",
-  });
+  const [form, setForm] = useState({ password: "", repeatPassword: "" });
+  const [passwordError, setPasswordError] = useState("");
+  const [repeatError, setRepeatError] = useState("");
 
   const handleChange = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleBlurPassword = (e: React.FocusEvent<HTMLInputElement>) => {
+    setPasswordError(
+      e.target.value.length >= 8
+        ? ""
+        : "La contraseña debe tener al menos 8 caracteres"
+    );
+  };
+  const handleBlurRepeat = (e: React.FocusEvent<HTMLInputElement>) => {
+    setRepeatError(
+      e.target.value === form.password ? "" : "Las contraseñas no coinciden"
+    );
   };
 
   return (
@@ -33,6 +45,9 @@ export default function NewPassword() {
           icon={<KeyIcon className="w-5 h-5" />}
           value={form.password}
           onChange={(e) => handleChange("password", e.target.value)}
+          onBlur={handleBlurPassword}
+          error={passwordError}
+          required
         />
 
         <Input
@@ -41,12 +56,16 @@ export default function NewPassword() {
           icon={<LockClosedIcon className="w-5 h-5" />}
           value={form.repeatPassword}
           onChange={(e) => handleChange("repeatPassword", e.target.value)}
+          onBlur={handleBlurRepeat}
+          error={repeatError}
+          required
         />
 
         <div className="flex flex-col items-center gap-2">
           <Button
             text="Cambiar Contraseña"
             icon={<CheckBadgeIcon className="w-5 h-5" />}
+            type="submit"
           />
         </div>
 
