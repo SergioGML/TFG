@@ -7,17 +7,11 @@ import jwt from "jsonwebtoken";
 // 📌 Registrar un nuevo usuario
 export const register = async (req: Request, res: Response) => {
   try {
-    const { name, email, password, pais_id } = req.body;
-    
-    // Validar campos obligatorios
-    if (!name || !email || !password || !pais_id) {
-      return res.status(400).json({ message: "Faltan datos" });
-    }
+    const { name, email, password /*, pais_id*/ } = req.body;
 
-    // Verificar si el país existe en la base de datos
-    const countryExists = await Pais.findByPk(pais_id);
-    if (!countryExists) {
-      return res.status(400).json({ message: "El país seleccionado no es válido" });
+    // Validar campos obligatorios (ya no pais_id)
+    if (!name || !email || !password) {
+      return res.status(400).json({ message: "Faltan datos" });
     }
 
     // Verificar si el usuario ya existe
@@ -30,15 +24,17 @@ export const register = async (req: Request, res: Response) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Crear el usuario
+    // Crear el usuario sin país
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      pais_id,
+      // pais_id: null  // opcional si tu modelo lo permite null
     });
 
-    return res.status(201).json({ message: "Usuario creado exitosamente", user });
+    return res
+      .status(201)
+      .json({ message: "Usuario creado exitosamente", user });
   } catch (error) {
     console.error("Error en el registro:", error);
     return res.status(500).json({ message: "Error en el servidor" });
@@ -49,7 +45,7 @@ export const register = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
-    
+
     // Validar campos obligatorios
     if (!email || !password) {
       return res.status(400).json({ message: "Faltan datos" });
@@ -75,6 +71,36 @@ export const login = async (req: Request, res: Response) => {
     return res.status(200).json({ token });
   } catch (error) {
     console.error("Error en el login:", error);
+    return res.status(500).json({ message: "Error en el servidor" });
+  }
+};
+
+// 📌 Actualizar país del usuario autenticado
+export const updateCountry = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.id;
+    const { pais_id } = req.body;
+
+    if (!pais_id) {
+      return res
+        .status(400)
+        .json({ message: "Debes seleccionar un país válido" });
+    }
+
+    // Verificar que el país existe
+    const countryExists = await Pais.findByPk(pais_id);
+    if (!countryExists) {
+      return res
+        .status(400)
+        .json({ message: "El país seleccionado no es válido" });
+    }
+
+    // Actualizar el país del usuario
+    await User.update({ pais_id }, { where: { id: userId } });
+
+    return res.json({ message: "País actualizado correctamente" });
+  } catch (error) {
+    console.error("Error al actualizar país:", error);
     return res.status(500).json({ message: "Error en el servidor" });
   }
 };

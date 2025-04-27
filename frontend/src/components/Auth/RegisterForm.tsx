@@ -1,34 +1,108 @@
-import { KeyIcon, EnvelopeIcon, SparklesIcon } from "@heroicons/react/24/solid";
+import { useState } from "react";
+import {
+  EnvelopeIcon,
+  KeyIcon,
+  SparklesIcon,
+  UserIcon,
+} from "@heroicons/react/24/solid";
+import Button from "../Button";
+import Input from "../Input";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterForm() {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const [error, setError] = useState("");
+
+  const handleChange = (field: string, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleRegister = async (e: React.FormEvent) => {
+    console.log("prueba");
+
+    e.preventDefault();
+    setError("");
+
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "Error en el registro");
+        return;
+      }
+
+      // Login automático
+      const loginRes = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+        }),
+      });
+
+      const loginData = await loginRes.json();
+      if (!loginRes.ok) {
+        setError(
+          loginData.message || "Error al iniciar sesión automáticamente"
+        );
+        return;
+      }
+
+      await login(loginData.token);
+      navigate("/country");
+    } catch (err) {
+      setError("Error en el servidor");
+    }
+  };
+
   return (
-    <form className="flex flex-col gap-4">
-      <div className="relative w-full">
-        <EnvelopeIcon className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
-        <input
-          type="email"
-          placeholder="Introduce tu email"
-          className="pl-10 py-3 w-full rounded-md border border-indigo-300 dark:border-rose-300 bg-white dark:bg-blue-900 text-violet-800 dark:text-white focus:outline-none focus:ring-3 focus:ring-rose-400"
+    <form onSubmit={handleRegister} className="flex flex-col gap-4">
+      <Input
+        type="text"
+        placeholder="Tu nombre"
+        icon={<UserIcon className="w-5 h-5" />}
+        value={form.name}
+        onChange={(e) => handleChange("name", e.target.value)}
+      />
+      <Input
+        type="email"
+        placeholder="Tu email"
+        icon={<EnvelopeIcon className="w-5 h-5" />}
+        value={form.email}
+        onChange={(e) => handleChange("email", e.target.value)}
+      />
+      <Input
+        type="password"
+        placeholder="Escoge tu contraseña"
+        icon={<KeyIcon className="w-5 h-5" />}
+        value={form.password}
+        onChange={(e) => handleChange("password", e.target.value)}
+      />
+
+      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+      <div className="flex flex-col items-center gap-2">
+        <Button
+          text="Crear cuenta"
+          icon={<SparklesIcon className="w-5 h-5" />}
+          type="submit"
         />
       </div>
-
-      <div className="relative w-full">
-        <KeyIcon className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none" />
-        <input
-          type="password"
-          placeholder="Escoge tu contraseña"
-          className="pl-10 py-3 w-full rounded-md border border-indigo-300 dark:border-rose-300 bg-white dark:bg-blue-900 text-violet-800 dark:text-white focus:outline-none focus:ring-3 focus:ring-rose-400"
-        />
-      </div>
-
-      <button
-        type="submit"
-        className="w-full flex items-center justify-center gap-2 bg-violet-400 hover:bg-violet-600 text-white hover:text-white font-semibold py-3 rounded-md 
-            dark:bg-rose-400 dark:hover:bg-rose-500 dark:text-white dark:font-black hover:scale-103 transition-transform duration-200 cursor-pointer"
-      >
-        <span>Crear cuenta</span>
-        <SparklesIcon className="w-5 h-5" />
-      </button>
     </form>
   );
 }

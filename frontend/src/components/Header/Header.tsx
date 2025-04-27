@@ -1,7 +1,10 @@
 import { CurrencyEuroIcon } from "@heroicons/react/24/solid";
-import Menu from "../DropdownMenu/Menu";
+import Menu from "../Menu/Menu";
+import { useAuth } from "../../context/AuthContext";
 
 function Header() {
+  const { user } = useAuth();
+
   return (
     <header
       className="w-full h-15 px-4 flex absolute items-center justify-between
@@ -10,9 +13,12 @@ function Header() {
       <div>
         <CurrencyEuroIcon className="w-9 h-9 text-slate-800 dark:text-slate-200" />
       </div>
-      <div className="flex items-center gap-4">
-        <Menu />
-      </div>
+
+      {user && (
+        <div className="flex items-center gap-4">
+          <Menu />
+        </div>
+      )}
     </header>
   );
 }

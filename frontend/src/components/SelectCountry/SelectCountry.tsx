@@ -1,105 +1,85 @@
-import React, { useState } from "react";
-import {
-  ChevronDownIcon,
-  InformationCircleIcon,
-  ExclamationCircleIcon,
-} from "@heroicons/react/24/outline";
+import { useState } from "react";
+import { ExclamationCircleIcon, UserIcon } from "@heroicons/react/24/outline";
+import Button from "../Button";
+import Info from "../Info";
+import ChooseMenu from "../ChooseMenu";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
-function SelectCountry() {
+export default function Country() {
   const [country, setCountry] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
+  const [error, setError] = useState("");
+  const { token } = useAuth();
+  const navigate = useNavigate();
 
-  const toggleMenu = () => {
-    setIsOpen(!isOpen);
-  };
+  const countries = [
+    { label: "España", value: "1" },
+    { label: "Andorra", value: "2" },
+  ];
 
-  const handleSelectCountry = (pais: string) => {
-    setCountry(pais);
-    setIsOpen(false);
-  };
+  const handleUpdateCountry = async () => {
+    setError("");
 
-  const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      action();
+    try {
+      const res = await fetch("http://localhost:3000/profile", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ pais_id: parseInt(country) }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.message || "No se pudo guardar el país");
+        return;
+      }
+
+      navigate("/profile"); // O la siguiente página de tu app
+    } catch (err) {
+      setError("Error al actualizar el país");
     }
   };
+
   return (
     <div>
-      <div className="flex flex-row justify-around mt-10 items-center">
-        <div
-          onClick={toggleMenu}
-          className="flex items-center text-slate-800 dark:text-slate-200 mb-5 p-4 rounded-2xl border-2 border-slate-200 dark:border-amber-500 w-fit text-lg cursor-pointer"
-        >
-          País seleccionado: {country === "" ? "Ninguno" : country}
-          <ChevronDownIcon className="w-6 h-6 ml-2 text-slate-800 dark:text-slate-200" />
-        </div>
-      </div>
-      {isOpen && (
-        <div className="w-full bg-slate-50 dark:bg-blue-900 rounded-md shadow-lg z-10 text-slate-800 dark:text-slate-200 cursor-pointer">
-          <div
-            className="border-b-2 flex items-center gap-4 p-4 text-xl border-slate-200 transform hover:bg-slate-100 dark:hover:bg-blue-800 hover:scale-103 transition-transform duration-200 cursor-pointer"
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) =>
-              handleKeyDown(e, () => handleSelectCountry("España"))
-            }
-            onClick={() => handleSelectCountry("España")}
-          >
-            España
-          </div>
+      <ChooseMenu
+        items={countries}
+        selectedItem={country}
+        onSelect={setCountry}
+        placeholder="Selecciona un país"
+      />
 
-          <div
-            className="flex items-center gap-4 p-4 text-xl border-slate-200 transform hover:bg-slate-100 dark:hover:bg-blue-800 hover:scale-103 transition-transform duration-200 cursor-pointer"
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => handleKeyDown(e, () => handleSelectCountry)}
-            onClick={() => handleSelectCountry("Andorra")}
-          >
-            Andorra
-          </div>
-        </div>
-      )}
-      {!isOpen && country === "" && (
+      {!country && (
         <div className="flex items-center justify-center gap-2 text-slate-800 dark:text-slate-200 mt-10 mb-10">
           <ExclamationCircleIcon className="w-5 h-5" />
           <span>Selecciona un país del menú desplegable</span>
         </div>
       )}
 
-      {country === "España" && (
-        <div className="mt-4 flex items-start gap-3 text-slate-800 dark:text-slate-200 bg-yellow-200 dark:bg-yellow-600 p-4 rounded-md text-justify w-fit">
-          <InformationCircleIcon className="w-8 h-8  shrink-0 text-slate-800 dark:text-slate-200" />
-
-          <p className="max-w-md text-start">
-            En España, las ganancias por criptomonedas tributan como ganancias
-            patrimoniales en el IRPF. Los tramos actuales son: 19% hasta
-            6.000 €, 21% entre 6.000 € y 50.000 €, 23% hasta 200.000 € y 27% a
-            partir de ahí.
-          </p>
+      {country === "1" && (
+        <div className="my-4">
+          <Info text="En España, las ganancias por criptomonedas tributan como ganancias patrimoniales en el IRPF. Los tramos actuales son: 19% hasta 6.000 €, 21% entre 6.000 € y 50.000 €, 23% hasta 200.000 € y 27% a partir de ahí." />
         </div>
       )}
-      {country === "Andorra" && (
-        <div className="mt-4 flex items-start gap-3 text-slate-800 dark:text-slate-200 bg-yellow-200 dark:bg-yellow-600 p-4 rounded-md text-justify w-fit">
-          <InformationCircleIcon className="w-8 h-8  shrink-0 text-slate-800 dark:text-slate-200" />
 
-          <p className="max-w-md text-start">
-            En Andorra, las ganancias por criptomonedas tributan como ganancias
-            de capital. Se aplica una tasa fija del 10%, con una exención de los
-            primeros 3.000 € anuales. No existe impuesto al patrimonio ni a las
-            herencias.
-          </p>
+      {country === "2" && (
+        <div className="my-4">
+          <Info text="En Andorra, las ganancias por criptomonedas tributan como ganancias de capital. Se aplica una tasa fija del 10%, con una exención de los primeros 3.000 € anuales. No existe impuesto al patrimonio ni a las herencias." />
         </div>
       )}
-      <button
-        type="submit"
-        className="w-full flex items-center justify-center gap-2 py-3 mt-4 bg-violet-400 hover:bg-violet-600 text-white hover:text-white font-semibold rounded-md
-              dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-white hover:scale-103 transition-transform duration-200 cursor-pointer"
-      >
-        <span>Continuar</span>
-      </button>
+
+      {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+
+      <div className="flex flex-col items-center gap-2 mt-4">
+        <Button
+          text="Continuar"
+          icon={<UserIcon className="w-5 h-5" />}
+          onClick={handleUpdateCountry}
+        />
+      </div>
     </div>
   );
 }
-
-export default SelectCountry;

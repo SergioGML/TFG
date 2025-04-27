@@ -5,6 +5,8 @@ import Profile from "./pages/Profile";
 import NewPassword from "./pages/NewPassword";
 import Footer from "./components/Footer/Footer";
 import Country from "./pages/Country";
+import Dashboard from "./pages/Dashboard";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
@@ -17,6 +19,14 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/NewPassword" element={<NewPassword />} />
           <Route path="/Country" element={<Country />} />
+          <Route
+            path="Dashboard"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </main>
       <Footer />
