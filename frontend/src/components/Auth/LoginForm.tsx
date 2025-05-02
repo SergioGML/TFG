@@ -32,14 +32,20 @@ export default function LoginForm() {
   };
 
   const handleBlurPassword = (e: React.FocusEvent<HTMLInputElement>) => {
-    setPasswordError(e.target.value ? "" : "La contraseña es obligatoria");
+    const v = e.target.value;
+    setPasswordError(
+      v.length >= 8 ? "" : "La contraseña debe tener al menos 8 caracteres"
+    );
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // validaciones previas
+
     const mailErr = validateEmail(form.email);
-    const passErr = form.password ? "" : "La contraseña es obligatoria";
+    const passErr =
+      form.password.length >= 8
+        ? ""
+        : "La contraseña debe tener al menos 8 caracteres";
     setEmailError(mailErr);
     setPasswordError(passErr);
     if (mailErr || passErr) return;
