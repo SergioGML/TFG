@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { register, login, getProfile } from "../controllers/authController";
 import { verifyToken } from "../middleware/authMiddleware";
-import { updateCountry } from "../controllers/authController";
+import { updateProfile } from "../controllers/authController";
 
 const router = Router();
 
@@ -12,7 +12,7 @@ router.post("/register", register);
 router.post("/login", login);
 
 // Actualizar país del usuario autenticado
-router.put("/profile", verifyToken, updateCountry);
+router.put("/profile", verifyToken, updateProfile);
 
 // Obtener perfil del usuario autenticado
 router.get("/profile", verifyToken, getProfile);

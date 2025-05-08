@@ -1,128 +1,131 @@
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
+import Hi from "../components/Profile/Hi";
+import SectionContainer from "../components/Profile/SectionContainer";
+import ProfileChanges from "../components/Profile/ProfileChanges";
+import Modal from "../components/Modal";
+import EmailEditForm from "../components/Profile/EmailEditForm";
 import Button from "../components/Button";
+
 
 export default function Profile() {
   const { user } = useAuth();
-  const navigate = useNavigate();
+  const [modalType, setModalType] = useState<
+    null | "name" | "email" | "password" | "country" | "delete"
+  >(null);
 
   if (!user) {
     return <p className="text-center pt-20">Cargando perfil...</p>;
   }
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-r from-rose-200 to-violet-400 dark:from-blue-800/80 dark:to-neutral-950">
-      <div className="pt-15"></div>
-
-      {/* Sección Nombre y correo */}
-      <div className=" bg-gray-100 dark:bg-rose-600/80 shadow-lg p-8 flex flex-col items-center">
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white">
-          ¡Hola! {user.name}
-        </h1>
-        <p className="mt-1 text-gray-600 dark:text-gray-300">{user.email}</p>
-
-        <Button
-          text="Volver al Portfolio"
-          onClick={() => navigate("/dashboard")}
-          variant="default"
-        />
-      </div>
+    <div className="w-full">
+      {/* Saludo */}
+      <Hi />
 
       {/* Sección Datos personales */}
       <section className="w-full bg-white dark:bg-blue-950/80 pt-10">
-        <div className="max-w-3xl mx-auto bg-white dark:bg-gray-100 rounded-xl border-2 border-amber-300 dark:border-amber-200 shadow p-8 px-4">
+        <SectionContainer borderColor="border-amber-300">
           <h2 className="text-3xl font-semibold text-amber-400 dark:text-rose-600 mb-8">
             Datos personales
           </h2>
-
           <div className="space-y-6">
-            {/* Nombre */}
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-gray-800 dark:text-blue-950">
-                  Nombre de usuario
-                </p>
-                <p className="text-gray-800 dark:text-rose-500">{user.name}</p>
-              </div>
-              <Button
-                text="Modificar nombre"
-                onClick={() => navigate("/profile/edit/name")}
-              />
-            </div>
-
-            {/* Email */}
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-gray-800 dark:text-blue-950">
-                  Email
-                </p>
-                <p className="text-gray-800 dark:text-rose-500">{user.email}</p>
-              </div>
-              <Button
-                text="Modificar email"
-                onClick={() => }
-              />
-            </div>
-
-            {/* Contraseña */}
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-gray-800 dark:text-blue-950">
-                  Contraseña
-                </p>
-                <p className="text-gray-800 dark:text-rose-500">********</p>
-              </div>
-              <Button
-                text="Modificar contraseña"
-                onClick={() => navigate("/profile/edit/password")}
-              />
-            </div>
-
-            {/* País */}
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-medium text-gray-800 dark:text-blue-950">
-                  País de residencia
-                </p>
-                <p className="text-gray-800 dark:text-rose-500">
-                  {user.pais_id === 1
-                    ? "España"
-                    : user.pais_id === 2
-                    ? "Andorra"
-                    : "Sin asignar"}
-                </p>
-              </div>
-              <Button
-                text="Modificar país"
-                onClick={() => navigate("/profile/edit/country")}
-              />
-            </div>
+            <ProfileChanges
+              label="Nombre de usuario"
+              value={user.name}
+              buttonText="Modificar nombre"
+              onClick={() => setModalType("name")}
+            />
+            <ProfileChanges
+              label="Email"
+              value={user.email}
+              buttonText="Modificar email"
+              onClick={() => setModalType("email")}
+            />
+            <ProfileChanges
+              label="Contraseña"
+              value="********"
+              buttonText="Modificar contraseña"
+              onClick={() => setModalType("password")}
+            />
+            <ProfileChanges
+              label="País de residencia"
+              value={
+                user.pais_id === 1
+                  ? "España"
+                  : user.pais_id === 2
+                  ? "Andorra"
+                  : "Sin asignar"
+              }
+              buttonText="Modificar país"
+              onClick={() => setModalType("country")}
+            />
           </div>
-        </div>
+        </SectionContainer>
       </section>
+
+      {/* Sección Eliminar cuenta */}
       <section className="w-full bg-white dark:bg-blue-950/80 py-10">
-        <div className="max-w-3xl mx-auto bg-white dark:bg-gray-100 rounded-xl border-2 border-red-500 dark:border-red-500 shadow p-8 px-4">
+        <SectionContainer borderColor="border-red-500">
           <h2 className="text-3xl font-semibold text-red-500 mb-8">
             Eliminar cuenta
           </h2>
+          <ProfileChanges
+            label="¿Quieres eliminar tu cuenta?"
+            value={""}
+            buttonText="Eliminar cuenta"
+            variant="danger"
+            onClick={() => setModalType("delete")}
+          />
+        </SectionContainer>
+      </section>
 
-          <div className="mt-1.5">
-            {/* Borrar Cuenta */}
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-bold text-red-500">
-                  ¿Quieres eliminar tu cuenta?
-                </p>
-              </div>
-              <Button
-                text="Eliminar cuenta"
-                variant="danger"
-                onClick={() => navigate("/profile/edit/name")}
-              />
-            </div>
+      {/* Overlay y Modal genérico */}
+      {modalType && (
+        <div
+          className="fixed inset-0 bg-black/90 flex items-center justify-center z-50"
+          onClick={() => setModalType(null)}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+          <Modal>
+  {modalType === "name" && (
+    <div className="text-center font-medium">
+      Formulario para modificar nombre
+    </div>
+  )}
+
+  {modalType === "email" && (
+    <EmailEditForm onClose={() => setModalType(null)} />
+  )}
+
+  {modalType === "password" && (
+    <div className="text-center font-medium">
+      Formulario para modificar contraseña
+    </div>
+  )}
+
+  {modalType === "country" && (
+    <div className="text-center font-medium">
+      Formulario para modificar país
+    </div>
+  )}
+
+  {modalType === "delete" && (
+    <div className="space-y-4">
+      <p className="text-center text-red-600 font-semibold">
+        ¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.
+      </p>
+      <div className="flex justify-center gap-4">
+        <Button text="Cancelar" onClick={() => setModalType(null)} />
+        {/* <Button text="Eliminar cuenta" variant="danger" onClick={deleteAccount} /> */}
+      </div>
+    </div>
+  )}
+</Modal>
+
           </div>
         </div>
-      </section>
+      )}
     </div>
   );
 }

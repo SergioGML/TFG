@@ -75,7 +75,7 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-// 📌 Actualizar país del usuario autenticado
+// Actualizar país del usuario autenticado
 export const updateCountry = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id;
@@ -105,7 +105,7 @@ export const updateCountry = async (req: Request, res: Response) => {
   }
 };
 
-// 📌 Obtener perfil del usuario autenticado
+// Obtener perfil del usuario autenticado
 export const getProfile = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id;
@@ -123,6 +123,53 @@ export const getProfile = async (req: Request, res: Response) => {
     return res.json(user);
   } catch (error) {
     console.error("Error al obtener perfil:", error);
+    return res.status(500).json({ message: "Error en el servidor" });
+  }
+};
+
+// Actualizar perfil (nombre, email, país o contraseña)
+export const updateProfile = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.id;
+    const { name, email, password, pais_id, oldPassword, newPassword } =
+      req.body;
+    const user = await User.findByPk(userId);
+    if (!user)
+      return res.status(404).json({ message: "Usuario no encontrado" });
+
+    if (name) {
+      await user.update({ name });
+      return res.json({ message: "Nombre actualizado" });
+    }
+    if (email && password) {
+      const match = await bcrypt.compare(password, user.password);
+      if (!match)
+        return res.status(400).json({ message: "Contraseña incorrecta" });
+      await user.update({ email });
+      return res.json({ message: "Email actualizado" });
+    }
+    if (pais_id) {
+      const countryExists = await Pais.findByPk(pais_id);
+      if (!countryExists)
+        return res.status(400).json({ message: "País no válido" });
+      await user.update({ pais_id });
+      return res.json({ message: "País actualizado" });
+    }
+    if (oldPassword && newPassword) {
+      const match = await bcrypt.compare(oldPassword, user.password);
+      if (!match)
+        return res
+          .status(400)
+          .json({ message: "Contraseña actual incorrecta" });
+      const salt = await bcrypt.genSalt(10);
+      const hashed = await bcrypt.hash(newPassword, salt);
+      await user.update({ password: hashed });
+      return res.json({ message: "Contraseña actualizada" });
+    }
+
+    return res.status(400).json({ message: "No hay datos para actualizar" });
+  } catch (error) {
+    console.error("Error al actualizar perfil:", error);
     return res.status(500).json({ message: "Error en el servidor" });
   }
 };
