@@ -1,5 +1,125 @@
-function Profile() {
-  return <h1>PROFILE PAGE</h1>;
+import { useState } from "react";
+import { useAuth } from "../context/AuthContext";
+import Hi from "../components/Profile/Hi";
+import SectionContainer from "../components/Profile/SectionContainer";
+import ProfileChanges from "../components/Profile/ProfileChanges";
+import Modal from "../components/Modal";
+import EmailEditForm from "../components/Profile/EmailEditForm";
+import NameEditForm from "../components/Profile/NameEditForm";
+import PwdEditForm from "../components/Profile/PwdEditForm";
+import CountryEditForm from "../components/Profile/CountryEditForm";
+import DeleteAccountForm from "../components/Profile/DeleteAccountForm";
+
+
+export default function Profile() {
+  const { user } = useAuth();
+  const [modalType, setModalType] = useState<
+    null | "name" | "email" | "password" | "country" | "delete"
+  >(null);
+
+  if (!user) {
+    return <p className="text-center pt-20">Cargando perfil...</p>;
+  }
+
+  return (
+    <div className="w-full">
+      {/* Saludo */}
+      <Hi />
+
+      {/* Sección Datos personales */}
+      <section className="w-full bg-white dark:bg-blue-950/80 pt-10">
+        <SectionContainer borderColor="border-amber-300">
+          <h2 className="text-3xl font-semibold text-amber-400 dark:text-rose-600 mb-8">
+            Datos personales
+          </h2>
+          <div className="space-y-6">
+            <ProfileChanges
+              label="Nombre de usuario"
+              value={user.name}
+              buttonText="Modificar nombre"
+              onClick={() => setModalType("name")}
+            />
+            <ProfileChanges
+              label="Email"
+              value={user.email}
+              buttonText="Modificar email"
+              onClick={() => setModalType("email")}
+            />
+            <ProfileChanges
+              label="Contraseña"
+              value="********"
+              buttonText="Modificar contraseña"
+              onClick={() => setModalType("password")}
+            />
+            <ProfileChanges
+              label="País de residencia"
+              value={
+                user.pais_id === 1
+                  ? "España"
+                  : user.pais_id === 2
+                    ? "Andorra"
+                    : "Sin asignar"
+              }
+              buttonText="Modificar país"
+              onClick={() => setModalType("country")}
+            />
+          </div>
+        </SectionContainer>
+      </section>
+
+      {/* Sección Eliminar cuenta */}
+      <section className="w-full bg-white dark:bg-blue-950/80 py-10">
+        <SectionContainer borderColor="border-red-500">
+          <h2 className="text-3xl font-semibold text-red-500 mb-8">
+            Eliminar cuenta
+          </h2>
+          <ProfileChanges
+            label="¿Quieres eliminar tu cuenta?"
+            value={""}
+            buttonText="Eliminar cuenta"
+            variant="danger"
+            onClick={() => setModalType("delete")}
+          />
+        </SectionContainer>
+      </section>
+
+      {/* Overlay y Modal genérico */}
+      {modalType && (
+        <div
+          className="fixed inset-0 bg-black/90 flex items-center justify-center z-50"
+          onClick={() => setModalType(null)}
+        >
+          <div onClick={(e) => e.stopPropagation()}>
+            <Modal>
+              {modalType === "name" && (
+                <NameEditForm onClose={() => setModalType(null)} />
+              )}
+
+              {modalType === "email" && (
+                <EmailEditForm onClose={() => setModalType(null)} />
+              )}
+
+              {modalType === "password" && (
+                <PwdEditForm onClose={() => setModalType(null)} />
+              )}
+
+              {modalType === "country" && (
+                <CountryEditForm onClose={() => setModalType(null)} />
+              )}
+
+              {modalType === "delete" && (
+                <div className="space-y-4">
+                  <DeleteAccountForm onClose={() => setModalType(null)} />
+                </div>
+              )}
+            </Modal>
+
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
-export default Profile;
+
+

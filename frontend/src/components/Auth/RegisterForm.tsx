@@ -1,13 +1,13 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import {
-  EnvelopeIcon,
-  KeyIcon,
-  SparklesIcon,
   UserIcon,
+  EnvelopeIcon,
+  SparklesIcon,
 } from "@heroicons/react/24/solid";
-import { useNavigate } from "react-router-dom";
 import Button from "../Button";
 import Input from "../Input";
+import PwdEye from "../PwdEye";
 import { useAuth } from "../../context/AuthContext";
 
 export default function RegisterForm() {
@@ -20,6 +20,8 @@ export default function RegisterForm() {
   const [passwordError, setPasswordError] = useState("");
   const [submitError, setSubmitError] = useState("");
 
+  const pwdRegex = /^(?=.*[A-Za-z])(?=.*[\d\W]).{6,}$/;
+
   const handleChange = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
@@ -28,8 +30,11 @@ export default function RegisterForm() {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(value) ? "" : "Email no válido";
   };
+
   const validatePassword = (value: string) =>
-    value.length >= 8 ? "" : "La contraseña debe tener al menos 8 caracteres";
+    pwdRegex.test(value)
+      ? ""
+      : "La contraseña debe tener 6 caracteres, letra y número";
 
   const handleBlurName = (e: React.FocusEvent<HTMLInputElement>) => {
     setNameError(e.target.value ? "" : "El nombre es obligatorio");
@@ -54,6 +59,7 @@ export default function RegisterForm() {
 
     setSubmitError("");
     try {
+      // Registro
       const res = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -64,11 +70,14 @@ export default function RegisterForm() {
         setSubmitError(data.message || "Error en el registro");
         return;
       }
-      // login automático
+      // Login automático tras registro
       const loginRes = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: form.email, password: form.password }),
+        body: JSON.stringify({
+          email: form.email,
+          password: form.password,
+        }),
       });
       const loginData = await loginRes.json();
       if (!loginRes.ok) {
@@ -85,40 +94,43 @@ export default function RegisterForm() {
   };
 
   return (
-    <form onSubmit={handleRegister} className="flex flex-col gap-4">
+    <form onSubmit={handleRegister} className="flex flex-col gap-6">
       <Input
         type="text"
         placeholder="Tu nombre"
-        icon={<UserIcon className="w-5 h-5" />}
+        icon={< UserIcon className="w-5 h-5 text-gray-400" />}
         value={form.name}
         onChange={(e) => handleChange("name", e.target.value)}
         onBlur={handleBlurName}
         error={nameError}
         required
       />
+
       <Input
         type="email"
         placeholder="Tu email"
-        icon={<EnvelopeIcon className="w-5 h-5" />}
+        icon={<EnvelopeIcon className="w-5 h-5 text-gray-400" />}
         value={form.email}
         onChange={(e) => handleChange("email", e.target.value)}
         onBlur={handleBlurEmail}
         error={emailError}
         required
       />
-      <Input
-        type="password"
+
+      <PwdEye
         placeholder="Escoge tu contraseña"
-        icon={<KeyIcon className="w-5 h-5" />}
         value={form.password}
         onChange={(e) => handleChange("password", e.target.value)}
         onBlur={handleBlurPassword}
         error={passwordError}
-        required
       />
-      {submitError && (
-        <p className="text-red-500 text-sm text-center">{submitError}</p>
-      )}
+
+      {
+        submitError && (
+          <p className="text-red-500 text-sm text-center">{submitError}</p>
+        )
+      }
+
       <div className="flex flex-col items-center gap-2">
         <Button
           text="Crear cuenta"
@@ -126,6 +138,15 @@ export default function RegisterForm() {
           type="submit"
         />
       </div>
-    </form>
+
+      <p className="text-center mt-2text-sm">
+        <Link
+          to="/login"
+          className="text-rose-500 hover:underline dark:text-yellow-300 dark:hover:text-yellow-200 text-[1.1rem]"
+        >
+          ¿Ya tienes cuenta? Inicia sesión
+        </Link>
+      </p>
+    </form >
   );
 }
