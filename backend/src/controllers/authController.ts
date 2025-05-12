@@ -160,3 +160,61 @@ export const deleteProfile = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "Error al eliminar la cuenta" });
   }
 };
+
+/**
+ * Olvidé mi contraseña: comprueba si el email existe
+ */
+export const forgotPassword = async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ message: "Falta el email" });
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ message: "Email no registrado" });
+
+    // Aquí podrías enviar un email con un token, pero de momento:
+    return res.json({
+      message: "Email correcto.",
+    });
+  } catch (err) {
+    console.error("Error en forgotPassword:", err);
+    return res.status(500).json({ message: "Error en el servidor" });
+  }
+};
+
+/**
+ * Resetear contraseña: recibe email + newPassword
+ */
+export const resetPassword = async (req: Request, res: Response) => {
+  try {
+    const { email, newPassword } = req.body;
+    if (!email || !newPassword) {
+      return res.status(400).json({ message: "Faltan datos" });
+    }
+    if (newPassword.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "La contraseña debe tener al menos 6 caracteres" });
+    }
+    // opcional: validar fuerza (letra + número/símbolo)
+    const pwdRegex = /^(?=.*[A-Za-z])(?=.*[\d\W]).{6,}$/;
+    if (!pwdRegex.test(newPassword)) {
+      return res.status(400).json({
+        message:
+          "La contraseña debe incluir al menos una letra y un número/símbolo",
+      });
+    }
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ message: "Email no registrado" });
+
+    const salt = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash(newPassword, salt);
+    await user.update({ password: hashed });
+
+    return res.json({ message: "Contraseña restablecida con éxito" });
+  } catch (err) {
+    console.error("Error en resetPassword:", err);
+    return res.status(500).json({ message: "Error en el servidor" });
+  }
+};
