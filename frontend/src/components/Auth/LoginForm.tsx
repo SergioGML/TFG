@@ -1,12 +1,10 @@
+// src/components/LoginForm.tsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  KeyIcon,
-  UserIcon,
-  ArrowRightCircleIcon,
-} from "@heroicons/react/24/solid";
+import { UserIcon, ArrowRightCircleIcon } from "@heroicons/react/24/solid";
 import Button from "../Button";
 import Input from "../Input";
+import PwdEye from "../PwdEye";
 import { useAuth } from "../../context/AuthContext";
 
 export default function LoginForm() {
@@ -18,7 +16,10 @@ export default function LoginForm() {
   const [passwordError, setPasswordError] = useState("");
   const [submitError, setSubmitError] = useState("");
 
-  const handleChange = (field: string, value: string) => {
+  // Regex: al menos 6 caracteres, 1 letra y 1 número/símbolo
+  const pwdRegex = /^(?=.*[A-Za-z])(?=.*[\d\W]).{6,}$/;
+
+  const handleChange = (field: "email" | "password", value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -34,18 +35,21 @@ export default function LoginForm() {
   const handleBlurPassword = (e: React.FocusEvent<HTMLInputElement>) => {
     const v = e.target.value;
     setPasswordError(
-      v.length >= 8 ? "" : "La contraseña debe tener al menos 8 caracteres"
+      pwdRegex.test(v)
+        ? ""
+        : "Contraseña Incorrecta"
     );
   };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validaciones antes de enviar
     const mailErr = validateEmail(form.email);
-    const passErr =
-      form.password.length >= 8
-        ? ""
-        : "La contraseña debe tener al menos 8 caracteres";
+    const passErr = pwdRegex.test(form.password)
+      ? ""
+      : "COntraseña Incorrecta";
+
     setEmailError(mailErr);
     setPasswordError(passErr);
     if (mailErr || passErr) return;
@@ -82,19 +86,19 @@ export default function LoginForm() {
           error={emailError}
           required
         />
-        <Input
-          type="password"
-          placeholder="Contraseña"
-          icon={<KeyIcon className="w-5 h-5" />}
+
+        <PwdEye
           value={form.password}
           onChange={(e) => handleChange("password", e.target.value)}
           onBlur={handleBlurPassword}
           error={passwordError}
-          required
+          placeholder="Contraseña"
         />
+
         {submitError && (
           <p className="text-red-500 text-sm text-center">{submitError}</p>
         )}
+
         <div className="flex flex-col items-center gap-2">
           <Button
             text="Login"
@@ -103,6 +107,7 @@ export default function LoginForm() {
           />
         </div>
       </form>
+
       <p className="text-center mt-5 text-sm">
         <Link
           to="/NewPassword"

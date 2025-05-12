@@ -21,9 +21,9 @@ export default function NewPassword() {
 
   const handleBlurPassword = (e: React.FocusEvent<HTMLInputElement>) => {
     setPasswordError(
-      e.target.value.length >= 8
+      e.target.value.length >= 6
         ? ""
-        : "La contraseña debe tener al menos 8 caracteres"
+        : "La contraseña debe tener al menos 6 caracteres"
     );
   };
   const handleBlurRepeat = (e: React.FocusEvent<HTMLInputElement>) => {

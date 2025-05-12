@@ -5,7 +5,10 @@ import SectionContainer from "../components/Profile/SectionContainer";
 import ProfileChanges from "../components/Profile/ProfileChanges";
 import Modal from "../components/Modal";
 import EmailEditForm from "../components/Profile/EmailEditForm";
-import Button from "../components/Button";
+import NameEditForm from "../components/Profile/NameEditForm";
+import PwdEditForm from "../components/Profile/PwdEditForm";
+import CountryEditForm from "../components/Profile/CountryEditForm";
+import DeleteAccountForm from "../components/Profile/DeleteAccountForm";
 
 
 export default function Profile() {
@@ -54,8 +57,8 @@ export default function Profile() {
                 user.pais_id === 1
                   ? "España"
                   : user.pais_id === 2
-                  ? "Andorra"
-                  : "Sin asignar"
+                    ? "Andorra"
+                    : "Sin asignar"
               }
               buttonText="Modificar país"
               onClick={() => setModalType("country")}
@@ -87,41 +90,29 @@ export default function Profile() {
           onClick={() => setModalType(null)}
         >
           <div onClick={(e) => e.stopPropagation()}>
-          <Modal>
-  {modalType === "name" && (
-    <div className="text-center font-medium">
-      Formulario para modificar nombre
-    </div>
-  )}
+            <Modal>
+              {modalType === "name" && (
+                <NameEditForm onClose={() => setModalType(null)} />
+              )}
 
-  {modalType === "email" && (
-    <EmailEditForm onClose={() => setModalType(null)} />
-  )}
+              {modalType === "email" && (
+                <EmailEditForm onClose={() => setModalType(null)} />
+              )}
 
-  {modalType === "password" && (
-    <div className="text-center font-medium">
-      Formulario para modificar contraseña
-    </div>
-  )}
+              {modalType === "password" && (
+                <PwdEditForm onClose={() => setModalType(null)} />
+              )}
 
-  {modalType === "country" && (
-    <div className="text-center font-medium">
-      Formulario para modificar país
-    </div>
-  )}
+              {modalType === "country" && (
+                <CountryEditForm onClose={() => setModalType(null)} />
+              )}
 
-  {modalType === "delete" && (
-    <div className="space-y-4">
-      <p className="text-center text-red-600 font-semibold">
-        ¿Estás seguro de que quieres eliminar tu cuenta? Esta acción es irreversible.
-      </p>
-      <div className="flex justify-center gap-4">
-        <Button text="Cancelar" onClick={() => setModalType(null)} />
-        {/* <Button text="Eliminar cuenta" variant="danger" onClick={deleteAccount} /> */}
-      </div>
-    </div>
-  )}
-</Modal>
+              {modalType === "delete" && (
+                <div className="space-y-4">
+                  <DeleteAccountForm onClose={() => setModalType(null)} />
+                </div>
+              )}
+            </Modal>
 
           </div>
         </div>
@@ -129,3 +120,6 @@ export default function Profile() {
     </div>
   );
 }
+
+
+

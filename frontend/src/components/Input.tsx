@@ -1,3 +1,6 @@
+// src/components/Input.tsx
+import React from "react";
+
 interface InputProps {
   type: string;
   placeholder: string;
@@ -8,6 +11,7 @@ interface InputProps {
   error?: string;
   required?: boolean;
   pattern?: string;
+  className?: string;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -20,31 +24,43 @@ const Input: React.FC<InputProps> = ({
   error,
   required = false,
   pattern,
+  className = "",
 }) => {
   return (
-    <div className="relative w-full">
-      {icon && (
-        <div className="absolute left-3 top-1/2 transform -translate-y-1/2 pointer-events-none text-gray-400">
-          {icon}
-        </div>
-      )}
-      <input
-        type={type}
-        value={value}
-        onChange={onChange}
-        onBlur={onBlur}
-        placeholder={placeholder}
-        required={required}
-        pattern={pattern}
-        className={`pl-10 py-3 w-full rounded-md border
-          ${
-            error
+    <div className="w-full">
+      <div className="relative w-full min-h-[72px]">
+        {icon && (
+          <div className="absolute left-3 top-3 pointer-events-none text-gray-400">
+            {icon}
+          </div>
+        )}
+
+        <input
+          type={type}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
+          placeholder={placeholder}
+          required={required}
+          pattern={pattern}
+          className={`
+            ${className}
+            pl-10 pr-10 h-12 w-full rounded-md border
+            ${error
               ? "border-red-500 focus:ring-red-500"
               : "border-indigo-300 focus:ring-amber-400"
-          }
-          bg-white dark:bg-blue-900 text-violet-800 dark:text-white focus:outline-none focus:ring-2 transition-colors`}
-      />
-      {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
+            }
+            bg-white dark:bg-blue-900 text-violet-800 dark:text-white
+            focus:outline-none focus:ring-2 transition-colors
+          `}
+        />
+
+        {error && (
+          <p className="absolute left-0 bottom-0 text-sm text-red-500">
+            {error}
+          </p>
+        )}
+      </div>
     </div>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PwdEye from "../PwdEye";
 import Input from "../Input";
 import Button from "../Button";
 import { useAuth } from "../../context/AuthContext";
@@ -16,11 +17,17 @@ const EmailEditForm: React.FC<Props> = ({ onClose }) => {
   const [errEmail, setErrEmail] = useState("");
 
   const handleSave = async () => {
-    
-    if (!currentPwd) return setErrPwd("Obligatorio");
+    if (!currentPwd) {
+      setErrPwd("Obligatorio");
+      return;
+    }
     setErrPwd("");
+
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!re.test(newEmail)) return setErrEmail("Email no válido");
+    if (!re.test(newEmail)) {
+      setErrEmail("Email no válido");
+      return;
+    }
     setErrEmail("");
 
     try {
@@ -35,7 +42,6 @@ const EmailEditForm: React.FC<Props> = ({ onClose }) => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
       toast.success(data.message);
-      
       await login(token!);
       onClose();
     } catch (err: any) {
@@ -44,16 +50,20 @@ const EmailEditForm: React.FC<Props> = ({ onClose }) => {
   };
 
   return (
-    <div className="space-y-4">
-      <Input
-        type="password"
-        placeholder="Contraseña actual"
+    <div className="flex flex-col gap-8">
+      <h2 className="text-2xl font-bold text-center">Cambiar email</h2>
+      <p className="text-center text-gray-500">
+        Introduce tu contraseña actual y el nuevo email.
+      </p>
+
+      <PwdEye
         value={currentPwd}
         onChange={(e) => setCurrentPwd(e.target.value)}
         onBlur={() => !currentPwd && setErrPwd("Obligatorio")}
         error={errPwd}
-        required
+        placeholder="Contraseña actual"
       />
+
       <Input
         type="email"
         placeholder="Nuevo email"
@@ -66,7 +76,9 @@ const EmailEditForm: React.FC<Props> = ({ onClose }) => {
         error={errEmail}
         required
       />
-      <div className="flex justify-end">
+
+      <div className="flex justify-center gap-2">
+        <Button text="Cancelar" variant="default" onClick={onClose} />
         <Button text="Guardar email" onClick={handleSave} />
       </div>
     </div>
