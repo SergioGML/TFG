@@ -1,8 +1,14 @@
 import { Router } from "express";
-import { register, login, getProfile } from "../controllers/authController";
+import {
+  register,
+  login,
+  getProfile,
+  deleteProfile,
+  updateProfile,
+  forgotPassword,
+  resetPassword,
+} from "../controllers/authController";
 import { verifyToken } from "../middleware/authMiddleware";
-import { updateProfile } from "../controllers/authController";
-import { deleteProfile } from "../controllers/authController";
 
 const router = Router();
 
@@ -20,5 +26,11 @@ router.get("/profile", verifyToken, getProfile);
 
 // Borra perfil del usuario autenticado
 router.delete("/profile", verifyToken, deleteProfile);
+
+// Olvidé contraseña: comprueba email
+router.post("/forgot-password", forgotPassword);
+
+// Resetear contraseña: actualiza contraseña
+router.post("/reset-password", resetPassword);
 
 export default router;

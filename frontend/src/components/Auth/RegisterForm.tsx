@@ -71,7 +71,7 @@ export default function RegisterForm() {
         return;
       }
       // Login automático tras registro
-      const loginRes = await fetch("http://localhost:5000/api/auth/login", {
+      const loginRes = await fetch("http://localhost:5000/api/auth/country", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -138,15 +138,6 @@ export default function RegisterForm() {
           type="submit"
         />
       </div>
-
-      <p className="text-center mt-2text-sm">
-        <Link
-          to="/login"
-          className="text-rose-500 hover:underline dark:text-yellow-300 dark:hover:text-yellow-200 text-[1.1rem]"
-        >
-          ¿Ya tienes cuenta? Inicia sesión
-        </Link>
-      </p>
     </form >
   );
 }
