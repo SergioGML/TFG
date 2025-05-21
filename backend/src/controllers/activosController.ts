@@ -1,48 +1,68 @@
+// src/controllers/activosController.ts
 import { Request, Response } from "express";
 import { Activo } from "../models/Activo";
-import { obtenerPrecioCripto } from "../services/coinMarketCapServices";
+import {
+  getTopAssets,
+  searchAssets,
+  obtenerPrecioCripto,
+} from "../services/coinMarketCapServices";
 
-// Obtener todos los activos
-export const listarActivos = async (req: Request, res: Response) => {
+export const listarTopActivos = async (_req: Request, res: Response) => {
+  try {
+    const list = await getTopAssets(8);
+    return res.json(list);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ msg: "Error en el servidor" });
+  }
+};
+
+export const buscarActivos = async (req: Request, res: Response) => {
+  const q = String(req.query.q || "").trim();
+  if (!q)
+    return res.status(400).json({ msg: "Falta criptomoneda de búsqueda" });
+  try {
+    const list = await searchAssets(q, 300);
+    return res.json(list);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ msg: "Error en el servidor" });
+  }
+};
+
+export const listarActivos = async (_req: Request, res: Response) => {
   try {
     const activos = await Activo.findAll();
-    res.json(activos);
-  } catch (error) {
-    console.error("Error al obtener activos:", error);
-    res.status(500).json({ msg: "Error en el servidor" });
+    return res.json(activos);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ msg: "Error en el servidor" });
   }
 };
 
-// Agregar un nuevo activo
 export const agregarActivo = async (req: Request, res: Response) => {
+  const { simbolo, nombre, coinmarketcap_id } = req.body;
+  if (!simbolo || !nombre || !coinmarketcap_id) {
+    return res.status(400).json({ msg: "Faltan datos" });
+  }
   try {
-    const { simbolo, nombre, coinmarketcap_id } = req.body;
-    
-    if (!simbolo || !nombre || !coinmarketcap_id) {
-      return res.status(400).json({ msg: "Faltan datos" });
-    }
-
-    const nuevoActivo = await Activo.create({ simbolo, nombre, coinmarketcap_id });
-    res.status(201).json(nuevoActivo);
-  } catch (error) {
-    console.error("Error al agregar activo:", error);
-    res.status(500).json({ msg: "Error en el servidor" });
+    const nuevo = await Activo.create({ simbolo, nombre, coinmarketcap_id });
+    return res.status(201).json(nuevo);
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ msg: "Error en el servidor" });
   }
 };
 
-// Obtener precio de una criptomoneda
 export const obtenerPrecio = async (req: Request, res: Response) => {
+  const sym = String(req.params.simbolo || "").toUpperCase();
+  if (!sym)
+    return res.status(400).json({ msg: "Debes proporcionar un símbolo" });
   try {
-    const { simbolo } = req.params;
-    if (!simbolo) {
-      return res.status(400).json({ msg: "Debes proporcionar un símbolo de criptomoneda" });
-    }
-
-    const precio = await obtenerPrecioCripto(simbolo.toUpperCase());
-    res.json({ simbolo, precio });
-  } catch (error) {
-    console.error("Error al obtener precio:", error);
-    res.status(500).json({ msg: "Error al obtener el precio de la criptomoneda" });
+    const precio = await obtenerPrecioCripto(sym);
+    return res.json({ simbolo: sym, precio });
+  } catch (e) {
+    console.error(e);
+    return res.status(500).json({ msg: "Error al obtener el precio" });
   }
 };
-

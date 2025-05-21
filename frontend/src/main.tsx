@@ -12,12 +12,12 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <AuthProvider>
         <App />
-        <ToastContainer 
-        position="top-right" 
-        autoClose={3000} 
-        hideProgressBar 
-        pauseOnHover={false} 
-      />
+        <ToastContainer
+          position="top-right"
+          autoClose={300}
+          hideProgressBar
+          pauseOnHover={false}
+        />
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>

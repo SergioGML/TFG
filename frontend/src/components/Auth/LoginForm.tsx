@@ -48,7 +48,7 @@ export default function LoginForm() {
     const mailErr = validateEmail(form.email);
     const passErr = pwdRegex.test(form.password)
       ? ""
-      : "COntraseña Incorrecta";
+      : "Contraseña Incorrecta";
 
     setEmailError(mailErr);
     setPasswordError(passErr);

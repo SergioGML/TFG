@@ -1,3 +1,4 @@
+// backend/src/models/Activo.ts
 import { Table, Column, Model, DataType } from "sequelize-typescript";
 
 @Table({ tableName: "activos", timestamps: false })
@@ -13,5 +14,4 @@ export class Activo extends Model {
 
   @Column({ type: DataType.STRING(100), allowNull: false })
   nombre!: string;
-
 }

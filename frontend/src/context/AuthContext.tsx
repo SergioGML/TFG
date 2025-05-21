@@ -17,6 +17,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   token: string | null;
+  loading: boolean;
   login: (token: string) => Promise<void>;
   logout: () => void;
 }
@@ -24,39 +25,43 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(
+  const navigate = useNavigate();
+  const [token, setToken] = useState<string | null>(() =>
     localStorage.getItem("token")
   );
-  const navigate = useNavigate();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(!!token);
 
   useEffect(() => {
-    if (token) {
-      fetchProfile(token);
+    if (!token) {
+      setLoading(false);
+      return;
     }
+
+    (async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/auth/profile", {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (!res.ok) {
+          throw new Error("No autorizado");
+        }
+        const userData = await res.json();
+        setUser(userData);
+      } catch {
+        localStorage.removeItem("token");
+        setToken(null);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    })();
   }, [token]);
-
-  //TEMPORAL
-  useEffect(() => {
-    console.log("Usuario actual:", user);
-  }, [user]);
-
-  const fetchProfile = async (jwt: string) => {
-    const res = await fetch("http://localhost:5000/api/auth/profile", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${jwt}` },
-    });
-
-    if (!res.ok) throw new Error("No autorizado");
-
-    const userData = await res.json();
-    setUser(userData);
-  };
 
   const login = async (jwt: string) => {
     localStorage.setItem("token", jwt);
     setToken(jwt);
-    await fetchProfile(jwt);
   };
 
   const logout = () => {
@@ -67,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
@@ -75,6 +80,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth debe usarse dentro de AuthProvider");
+  if (!context) {
+    throw new Error("useAuth debe usarse dentro de AuthProvider");
+  }
   return context;
 }
