@@ -103,6 +103,15 @@ export default function Dashboard() {
     );
   }, [assetsWithBenefit]);
 
+  // 4e) Beneficio realizado
+  const realizedProfit = useMemo(
+    () =>
+      transacciones
+        .filter((t) => t.tipo_operacion === "venta")
+        .reduce((sum, t) => sum + Number(t.cantidad_obtenida ?? 0), 0),
+    [transacciones]
+  );
+
   // 5) Modales y callbacks
   const [showSearch, setShowSearch] = useState(false);
   const [modalAsset, setModalAsset] = useState<Active | null>(null);
@@ -141,13 +150,13 @@ export default function Dashboard() {
           <Resume title="Coste Total" amount={costBasis} />
           {best && (
             <Resume
-              title="Best Performer"
+              title="Mejor Activo"
               subtitle={best.activo.simbolo}
               amount={best.benefit}
               percent={best.percent}
             />
           )}
-          <Resume title="Impuestos" />
+          <Resume title="Ganancias realizadas" amount={realizedProfit} />
         </div>
 
         {/* Botón “Añade Activo” */}
