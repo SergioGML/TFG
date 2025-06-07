@@ -7,7 +7,7 @@ function Header() {
 
   return (
     <header
-      className="w-full h-15 px-4 flex absolute items-center justify-between
+      className="w-full h-20 px-4 flex absolute items-center justify-between
      bg-white dark:bg-blue-950/80 shadow-inner dark:shadow-gray-500/20 border-t dark:border-gray-700"
     >
       <div>

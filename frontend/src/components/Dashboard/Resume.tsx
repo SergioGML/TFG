@@ -1,15 +1,9 @@
-// frontend/src/components/Dashboard/Resume/Resume.tsx
-import React from "react";
-
 interface ResumeProps {
-  /** Título del card (ej. "Balance total") */
   title: string;
-  /** Monto principal (€ x.xxx,xx) */
   amount?: number;
-  /** Porcentaje opcional (se pinta en verde si ≥0, en rojo si <0) */
   percent?: number;
-  /** Texto secundario opcional (por ejemplo el símbolo del mejor activo) */
   subtitle?: string;
+  taxPercent?: number;
 }
 
 export default function Resume({
@@ -17,9 +11,11 @@ export default function Resume({
   amount,
   percent,
   subtitle,
+  taxPercent,
 }: ResumeProps) {
   const hasAmount = typeof amount === "number";
   const hasPercent = typeof percent === "number";
+  const hasTaxPercent = typeof taxPercent === "number";
   const isPositive = (percent ?? 0) >= 0;
 
   // Formateadores
@@ -37,7 +33,7 @@ export default function Resume({
     })}%`;
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow p-6 flex-1 min-w-[200px] max-w-sm">
+    <div className="bg-white dark:bg-gray-800 rounded-xl p-6 flex-1 min-w-[200px] max-w-sm shadow-xl">
       {/* Título */}
       <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">
         {title}
@@ -57,7 +53,7 @@ export default function Resume({
         </p>
       )}
 
-      {/* Percent */}
+      {/* Percent (positivo/negativo, como para criptos) */}
       {hasPercent && (
         <p
           className={`mt-1 text-sm font-medium ${isPositive ? "text-green-500" : "text-red-500"
@@ -66,6 +62,17 @@ export default function Resume({
           {fmtPercent(percent!)}
         </p>
       )}
+
+      {/* TaxPercent (solo valor plano con % sin signo ni colores) */}
+      {hasTaxPercent && (
+        <p className="mt-1 text-lg font-semibold text-gray-800 dark:text-white">
+          {taxPercent.toLocaleString("es-ES", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })}%
+        </p>
+      )}
+
     </div>
   );
 }

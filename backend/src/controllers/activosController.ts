@@ -42,14 +42,28 @@ export const listarActivos = async (_req: Request, res: Response) => {
 
 export const agregarActivo = async (req: Request, res: Response) => {
   const { simbolo, nombre, coinmarketcap_id } = req.body;
+
   if (!simbolo || !nombre || !coinmarketcap_id) {
     return res.status(400).json({ msg: "Faltan datos" });
   }
+
   try {
+    // Verificamos primero si existe por coinmarketcap_id o simbolo
+    const existente = await Activo.findOne({
+      where: {
+        coinmarketcap_id,
+      },
+    });
+
+    if (existente) {
+      return res.status(200).json(existente);
+    }
+
+    // Insertamos solo si no existe
     const nuevo = await Activo.create({ simbolo, nombre, coinmarketcap_id });
     return res.status(201).json(nuevo);
   } catch (e) {
-    console.error(e);
+    console.error("Error al agregar activo:", e);
     return res.status(500).json({ msg: "Error en el servidor" });
   }
 };

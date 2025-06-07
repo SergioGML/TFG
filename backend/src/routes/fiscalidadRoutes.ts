@@ -1,10 +1,8 @@
 import { Router } from "express";
-import { obtenerTramosFiscales } from "../controllers/fiscalidadController";
 import { verifyToken } from "../middleware/authMiddleware";
+import { obtenerTramosFiscales } from "../controllers/fiscalidadController";
 
 const router = Router();
-
-// Ruta para obtener los tramos fiscales del usuario autenticado
-router.get("/tramos", verifyToken, obtenerTramosFiscales);
+router.get("/", verifyToken, obtenerTramosFiscales);
 
 export default router;

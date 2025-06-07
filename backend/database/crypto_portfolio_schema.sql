@@ -35,8 +35,7 @@ CREATE TABLE transacciones (
     cantidad_comprada NUMERIC(12,6),     -- Número de criptomonedas compradas
     precio_compra NUMERIC(12,6),         -- Precio de compra por unidad
 
-    -- Campos para operación de venta:
-    cantidad_obtenida NUMERIC(12,2),        -- Cantidad de dinero obtenido por la venta
+    -- Campos para operación de venta:   
     cantidad_vendida NUMERIC(12,6),      -- Número de criptomonedas vendidas
     precio_venta NUMERIC(12,6),          -- Precio de venta por unidad
     precio_promedio_compra NUMERIC(12,6),  -- Precio promedio de compra (útil para comparar)

@@ -22,17 +22,17 @@ export default function Profile() {
   }
 
   return (
-    <div className="w-full">
+    <div className="w-full text-xl text-slate-800 dark:text-slate-200">
       {/* Saludo */}
       <Hi />
 
       {/* Sección Datos personales */}
-      <section className="w-full bg-white dark:bg-blue-950/80 pt-10">
-        <SectionContainer borderColor="border-amber-300">
-          <h2 className="text-3xl font-semibold text-amber-400 dark:text-rose-600 mb-8">
+      <section className="w-full h-[650px] bg-white dark:bg-blue-950/80 pt-20">
+        <SectionContainer borderColor="border-amber-400 dark:border-rose-600">
+          <h2 className="text-3xl font-semibold text-amber-400 dark:text-white mb-8">
             Datos personales
           </h2>
-          <div className="space-y-6">
+          <div className="space-y-6 text-lg">
             <ProfileChanges
               label="Nombre de usuario"
               value={user.name}
@@ -68,7 +68,7 @@ export default function Profile() {
       </section>
 
       {/* Sección Eliminar cuenta */}
-      <section className="w-full bg-white dark:bg-blue-950/80 py-10">
+      <section className="w-full bg-white dark:bg-blue-950/80 py-6">
         <SectionContainer borderColor="border-red-500">
           <h2 className="text-3xl font-semibold text-red-500 mb-8">
             Eliminar cuenta

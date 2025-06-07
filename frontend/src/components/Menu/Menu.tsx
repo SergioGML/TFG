@@ -40,11 +40,11 @@ function Menu() {
   return (
     <div className="relative">
       <div onClick={toggleMenu}>
-        <Bars4Icon className="w-9 h-9 text-slate-800 dark:text-slate-200" />
+        <Bars4Icon className="w-11 h-11 text-slate-800 dark:text-slate-200" />
       </div>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 text-center bg-slate-50 dark:bg-slate-800 dark:border-2 rounded-md shadow-lg z-10 text-slate-800 dark:text-slate-200 cursor-pointer">
+        <div className="absolute right-0 mt-2 w-52 text-center bg-slate-50 dark:bg-slate-800 dark:border-2 rounded-md shadow-lg z-10 text-slate-800 dark:text-slate-200 cursor-pointer">
           <div
             className="flex items-center gap-4 p-4"
             role="button"

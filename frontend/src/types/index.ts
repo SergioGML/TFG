@@ -12,9 +12,11 @@ export interface Transaction {
   cantidad_invertida?: number;
   cantidad_comprada?: number;
   precio_compra?: number;
-  cantidad_obtenida?: number;
   cantidad_vendida?: number;
   precio_venta?: number;
+  precio_promedio_compra?: number;
+  precio_promedio_venta?: number;
+  ratio_beneficio?: number;
   fecha_transaccion: string;
   activo: Active;
 }

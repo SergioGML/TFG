@@ -13,7 +13,7 @@ const SectionContainer: React.FC<SectionContainerProps> = ({
     <div
       className={`
         max-w-3xl mx-auto
-        bg-white dark:bg-gray-100
+        bg-white dark:bg-blue-800/20
         rounded-xl border-2 ${borderColor}
         shadow p-8 px-4
       `}

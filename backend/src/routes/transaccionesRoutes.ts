@@ -19,13 +19,12 @@ router.post(
     check("tipo_operacion")
       .isIn(["compra", "venta"])
       .withMessage("El tipo de operación debe ser 'compra' o 'venta'"),
-    check("cantidad_invertida").isNumeric().optional(),
-    check("cantidad_comprada").isNumeric().optional(),
-    check("precio_compra").isNumeric().optional(),
-    check("cantidad_obtenida").isNumeric().optional(),
-    check("cantidad_vendida").isNumeric().optional(),
-    check("precio_venta").isNumeric().optional(),
-    // Para creación automática
+    check("cantidad_invertida").optional().isNumeric(),
+    check("cantidad_comprada").optional().isNumeric(),
+    check("precio_compra").optional().isNumeric(),
+    check("cantidad_vendida").optional().isNumeric(),
+    check("precio_venta").optional().isNumeric(),
+    // Para creación automática del activo
     check("simbolo")
       .optional()
       .isString()

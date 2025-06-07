@@ -48,7 +48,7 @@ export default function RegisterForm() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    // validaciones previas
+
     const nErr = form.name ? "" : "El nombre es obligatorio";
     const mailErr = validateEmail(form.email);
     const passErr = validatePassword(form.password);
@@ -59,7 +59,7 @@ export default function RegisterForm() {
 
     setSubmitError("");
     try {
-      // Registro
+      // 1) Registrar usuario
       const res = await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -70,8 +70,9 @@ export default function RegisterForm() {
         setSubmitError(data.message || "Error en el registro");
         return;
       }
-      // Login automático tras registro
-      const loginRes = await fetch("http://localhost:5000/api/auth/country", {
+
+      // 2) Login automático con /api/auth/login
+      const loginRes = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -86,12 +87,15 @@ export default function RegisterForm() {
         );
         return;
       }
+
+      // 3) Guardar token y redirigir
       await login(loginData.token);
       navigate("/country");
     } catch {
       setSubmitError("Error en el servidor");
     }
   };
+
 
   return (
     <form onSubmit={handleRegister} className="flex flex-col gap-6">

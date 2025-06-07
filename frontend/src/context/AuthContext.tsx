@@ -62,6 +62,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = async (jwt: string) => {
     localStorage.setItem("token", jwt);
     setToken(jwt);
+
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/profile", {
+        method: "GET",
+        headers: { Authorization: `Bearer ${jwt}` },
+      });
+      if (!res.ok) throw new Error("Error al recuperar perfil");
+      const userData = await res.json();
+      setUser(userData);
+    } catch {
+      localStorage.removeItem("token");
+      setToken(null);
+      setUser(null);
+      throw new Error("No se pudo recuperar el perfil tras login");
+    }
   };
 
   const logout = () => {

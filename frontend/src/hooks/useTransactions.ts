@@ -25,8 +25,8 @@ export function useTransactions(): UseTransactionsResult {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) throw new Error("Error al cargar transacciones");
-      const data: Transaction[] = await res.json();
-      setTransacciones(data);
+      const json = await res.json();
+      setTransacciones(json.transacciones || []);
     } catch (err: any) {
       setError(err.message || "Error desconocido");
     } finally {
