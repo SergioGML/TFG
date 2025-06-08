@@ -1,24 +1,46 @@
 import { CurrencyEuroIcon } from "@heroicons/react/24/solid";
 import Menu from "../Menu/Menu";
 import { useAuth } from "../../context/AuthContext";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
   const { user } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate("/dashboard");
+  };
+
+  const isTaxPage = location.pathname === "/tax";
 
   return (
     <header
       className="w-full h-20 px-4 flex absolute items-center justify-between
      bg-white dark:bg-blue-950/80 shadow-inner dark:shadow-gray-500/20 border-t dark:border-gray-700"
     >
-      <div>
+      <div className="flex items-center gap-4 cursor-pointer" onClick={handleLogoClick} role="button" tabIndex={0} >
         <CurrencyEuroIcon className="w-9 h-9 text-slate-800 dark:text-slate-200" />
+        <span className="text-2xl" >Crypto Wallet</span>
       </div>
 
-      {user && (
-        <div className="flex items-center gap-4">
-          <Menu />
-        </div>
-      )}
+      <div className="flex items-center gap-14">
+        {user && (
+          <>
+            <a
+              href={isTaxPage ? "/dashboard" : "/tax"}
+              className="text-2xl text-amber-300 dark:text-white hover:underline font-medium"
+            >
+              {isTaxPage ? "Ir al Dashboard" : "Ir a Fiscalidad"}
+            </a>
+            <div className="flex items-center gap-4">
+              <Menu />
+            </div>
+          </>
+        )}
+      </div>
+
     </header>
   );
 }

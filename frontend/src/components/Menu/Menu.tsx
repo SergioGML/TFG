@@ -19,10 +19,7 @@ function Menu() {
 
   const handleProfileClick = () => {
     navigate("/profile");
-  };
-
-  const handleThemeChange = () => {
-    // Logic to change the theme goes here
+    setIsOpen(false);
   };
 
   const handleLogout = () => {
@@ -53,17 +50,6 @@ function Menu() {
             onClick={handleProfileClick}
           >
             <PencilIcon className="w-5" /> Editar perfil
-          </div>
-
-          <div
-            className="flex items-center gap-4 p-4"
-            role="button"
-            tabIndex={0}
-            onKeyDown={(e) => handleKeyDown(e, handleThemeChange)}
-            onClick={toggleMenu}
-          >
-            <SparklesIcon className="w-5" />
-            Cambiar Tema
           </div>
 
           <div

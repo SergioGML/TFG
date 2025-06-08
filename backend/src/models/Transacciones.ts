@@ -6,7 +6,7 @@ import {
   ForeignKey,
   BelongsTo,
 } from "sequelize-typescript";
-import { User } from "./User";
+import { User } from "./Usuario";
 import { Activo } from "./Activo";
 
 @Table({ tableName: "transacciones", timestamps: false })
@@ -22,14 +22,12 @@ export class Transaccion extends Model {
   @Column({ type: DataType.INTEGER, allowNull: false })
   activo_id!: number;
 
-  // RECOMENDACIÓN: enum restringido a 'compra' | 'venta'
   @Column({
     type: DataType.ENUM("compra", "venta"),
     allowNull: false,
   })
   tipo_operacion!: "compra" | "venta";
 
-  // COMPRA
   @Column({ type: DataType.DECIMAL(12, 2), allowNull: true })
   cantidad_invertida?: number;
 
@@ -39,14 +37,12 @@ export class Transaccion extends Model {
   @Column({ type: DataType.DECIMAL(12, 6), allowNull: true })
   precio_compra?: number;
 
-  // VENTA
   @Column({ type: DataType.DECIMAL(12, 6), allowNull: true })
   cantidad_vendida?: number;
 
   @Column({ type: DataType.DECIMAL(12, 6), allowNull: true })
   precio_venta?: number;
 
-  // OPCIONALES
   @Column({ type: DataType.DECIMAL(18, 10), allowNull: true })
   precio_promedio_compra?: number;
 
@@ -59,7 +55,7 @@ export class Transaccion extends Model {
   @Column({ type: DataType.DATE, defaultValue: DataType.NOW })
   fecha_transaccion!: Date;
 
-  @BelongsTo(() => User)
+  @BelongsTo(() => User, { onDelete: "CASCADE" })
   user!: User;
 
   @BelongsTo(() => Activo)

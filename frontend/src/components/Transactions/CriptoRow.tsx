@@ -104,11 +104,23 @@ function CriptoRow({
             <td className="px-6 py-4 text-center">
                 <button
                     onClick={onAddTransaction}
-                    className="p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded"
+                    className="p-2 hover:bg-gray-200 dark:hover:bg-gray-800 rounded cursor-pointer"
                 >
-                    <PlusIcon className="w-6 h-6 text-amber-500" />
+                    <PlusIcon className="w-6 h-6 text-amber-500 dark:text-amber-300" />
                 </button>
             </td>
+            <td className="px-6 py-4 text-center">
+                <div className="flex gap-2 justify-center">
+
+                    <a
+                        href={`/transactions/${activo.simbolo}`}
+                        className="text-blue-600 dark:text-amber-300 hover:underline self-center text-xl"
+                    >
+                        Ver transacciones
+                    </a>
+                </div>
+            </td>
+
         </tr>
     );
 }

@@ -1,4 +1,3 @@
-// src/App.tsx
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header/Header";
 import Footer from "./components/Footer/Footer";
@@ -9,6 +8,8 @@ import Country from "./pages/Country";
 import Dashboard from "./pages/Dashboard";
 import Tax from "./pages/Tax";
 import PrivateRoute from "./components/PrivateRoute";
+import TransactionHistory from "./pages/TransactionHistory";
+
 
 function App() {
   return (
@@ -21,6 +22,8 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/new-password" element={<NewPassword />} />
           <Route path="/country" element={<Country />} />
+          <Route path="/transactions/:simbolo" element={<TransactionHistory />} />
+
 
           {/* Protected routes */}
           <Route

@@ -1,11 +1,9 @@
 import dotenv from "dotenv";
 import { Sequelize } from "sequelize-typescript";
-import { User } from "../models/User"; 
-import { GestionFiscal } from "../models/GestionFiscal";
+import { User } from "../models/Usuario";
 import { Activo } from "../models/Activo";
 import { Transaccion } from "../models/Transacciones";
-import { Alerta } from "../models/Alerta";
-import { Pais } from "../models/Pais";  
+import { Pais } from "../models/Pais";
 import { TramoFiscal } from "../models/TramoFiscal";
 
 dotenv.config();
@@ -18,5 +16,5 @@ export const sequelize = new Sequelize({
   port: Number(process.env.DB_PORT),
   dialect: "postgres",
   logging: false,
-  models: [User, GestionFiscal, Activo, Transaccion, Alerta, Pais, TramoFiscal], 
+  models: [User, Activo, Transaccion, Pais, TramoFiscal],
 });

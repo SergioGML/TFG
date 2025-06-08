@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@nivo/bar": "^0.99.0",
+    "@nivo/core": "^0.99.0",
+    "@nivo/line": "^0.99.0",
+    "@nivo/pie": "^0.99.0",
+    "recharts": "^2.15.3"
+  }
+}

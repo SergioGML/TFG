@@ -40,7 +40,7 @@ const PwdEditForm: React.FC<Props> = ({ onClose }) => {
     setErrRepeat("");
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/profile/password", {
+      const res = await fetch("http://localhost:5000/api/auth/profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -48,6 +48,7 @@ const PwdEditForm: React.FC<Props> = ({ onClose }) => {
         },
         body: JSON.stringify({ oldPassword: currentPwd, newPassword: newPwd }),
       });
+
       const data = await res.json();
       if (!res.ok) throw new Error(data.message);
       toast.success(data.message);

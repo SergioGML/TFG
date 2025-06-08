@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { TramoFiscal } from "../models/TramoFiscal";
-import { User } from "../models/User";
+import { User } from "../models/Usuario";
 import { Pais } from "../models/Pais";
 
 export const obtenerTramosFiscales = async (req: Request, res: Response) => {

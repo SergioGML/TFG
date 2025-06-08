@@ -1,10 +1,8 @@
 import React, { useMemo, useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import { useFiscalidad, TramoFiscalEntry } from "../hooks/useTax";
 import { useTransactions } from "../hooks/useTransactions";
 import { useMarketData } from "../hooks/useMarketData";
 import Resume from "../components/Dashboard/Resume";
-import Info from "../components/Info";
 import Input from "../components/Input";
 import Button from "../components/Button";
 
@@ -23,7 +21,6 @@ function calcularImpuesto(base: number, tramos: TramoFiscalEntry[]): number {
 }
 
 export default function Tax() {
-    const { user } = useAuth();
     const { data: fiscalidad, loading: fxLoading, error: fxError } = useFiscalidad();
     const { transacciones } = useTransactions();
 
@@ -104,14 +101,7 @@ export default function Tax() {
 
     return (
         <main className="w-full pt-8 px-6 md:px-20 bg-gray-100 dark:bg-gray-800 min-h-screen">
-            <section className=" p-6 my-12">
-                <h3 className="text-3xl mb-6 bg-amber-200 dark:bg-amber-500 text-gray-800 dark:text-white p-4 rounded-lg shadow w-2xl">
-                    ¡Hola {user?.name}! Tu país de residencia es:{" "}
-                    {fxLoading ? "…" : fxError ? fxError : fiscalidad?.pais || "desconocido"}
-                </h3>
-            </section>
-
-            <section className="flex flex-col md:flex-row bg-amber-gray-50 dark:bg-gray-900 rounded-2xl shadow-2xl dark:text-white mb-8 text gap-8 justify-around p-12">
+            <section className="flex flex-col md:flex-row bg-amber-gray-50 dark:bg-gray-900 rounded-2xl shadow-2xl dark:text-white mb-8 text gap-8 justify-around p-12 mt-24">
                 <section className="w-full md:w-1/2">
                     <h4 className="text-4xl font-semibold mb-10 text-rose-500 dark:text-rose-400">Ten en cuenta...</h4>
                     <p className="text-2xl mb-4 text-start">
@@ -126,8 +116,8 @@ export default function Tax() {
                             <li><strong>Rendimientos de actividades económicas</strong></li>
                         </ul>
                     </p>
-
-                    <div className=" my-18 text-2xl border-2 border-rose-500 dark:border-rose-400 p-6 rounded-lg">
+                    <Resume title="Tasa impositiva actual" taxPercent={tasaActual} />
+                    <div className="my-18 w-fit text-2xl border-2 border-rose-500 dark:border-rose-400 p-8 rounded-lg">
                         <h3 className="text-4xl font-semibold my-6 text-rose-500 dark:text-rose-400">¿Otras ganancias?</h3>
                         <p className="mb-10">
                             <strong>Introduce aquí otras ganancias no cripto:</strong>
@@ -136,8 +126,8 @@ export default function Tax() {
                             type="number"
                             value={otrasGananciasInput}
                             onChange={(e) => setOtrasGananciasInput(e.target.value)}
-                            placeholder="Introduce otras ganancias (€)"
-                            className="w-full max-w-xs"
+                            placeholder="Introduce el total"
+                            className="w-full max-w-md text-start"
                         />
                         <div className="flex gap-4">
                             <Button
@@ -160,37 +150,39 @@ export default function Tax() {
                         </div>
                     </div>
 
-                    <Resume title="Tasa impositiva actual" taxPercent={tasaActual} />
-                    <p className="text-2xl mb-4 text-start my-10">
-                        Esta tasa se aplica a tus ganancias realizadas en criptomonedas (y otras inversiones que hayas indicado).
-                    </p>
                 </section>
 
-                <section className="w-full md:w-1/3 flex flex-col gap-6 ">
+                <section className="w-full md:w-1/3 flex flex-col gap-6 mt-8 ">
                     <div className="my-3">
                         <Resume title="Ganancias no realizadas" amount={balanceNoRealizado} />
                         <p className="text-2xl mb-4 text-start my-6">
                             Ganancias potenciales si vendieras tus criptos hoy.
                         </p>
-                    </div>
-                    <div className="my-3">
-                        <Resume title="Impuestos sobre ganancias realizadas" amount={impuestoRealizadas} />
-                        <p className="text-2xl mb-4 text-start my-6">
-                            Impuestos que debes pagar por ventas ya realizadas.
-                        </p>
-                    </div>
-                    <div className="my-3">
-                        <Resume title="Ganancias realizadas" amount={gananciasRealizadas} />
-                        <p className="text-2xl mb-4 text-start my-6">
-                            Beneficio neto obtenido por ventas reales.
-                        </p>
+                        <div className="border-2 border-dashed"></div>
                     </div>
                     <div className="my-3">
                         <Resume title="Impuestos sobre ganancias no realizadas" amount={impuestoNoRealizadas} />
                         <p className="text-2xl mb-4 text-start my-6">
                             Estimación si vendieras toda tu cartera al precio actual.
                         </p>
+                        <div className="border-2 border-dashed"></div>
                     </div>
+                    <div className="my-3">
+                        <Resume title="Ganancias realizadas" amount={gananciasRealizadas} />
+                        <p className="text-2xl mb-4 text-start my-6">
+                            Beneficio obtenido por ventas menos el importe que costó la inversión
+                        </p>
+                        <div className="border-2 border-dashed"></div>
+                    </div>
+
+                    <div className="my-3">
+                        <Resume title="Impuestos sobre ganancias realizadas" amount={impuestoRealizadas} />
+                        <p className="text-2xl mb-4 text-start my-6">
+                            Impuestos que debes pagar por ventas ya realizadas.
+                        </p>
+                        <div className="border-2 border-dashed"></div>
+                    </div>
+
                 </section>
             </section>
         </main>

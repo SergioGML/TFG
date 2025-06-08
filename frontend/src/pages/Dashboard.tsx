@@ -1,5 +1,4 @@
-// frontend/src/pages/Dashboard.tsx
-import React, { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { PlusCircleIcon } from "@heroicons/react/24/solid";
 import { useAuth } from "../context/AuthContext";
 import SearchAssetModal from "../components/Transactions/SearchAssetModal";
@@ -8,14 +7,13 @@ import CriptoTable from "../components/Transactions/CriptoTable";
 import { useTransactions } from "../hooks/useTransactions";
 import { useMarketData } from "../hooks/useMarketData";
 import Resume from "../components/Dashboard/Resume";
+
 import type { Active } from "../types";
-import Button from "../components/Button";
 
 export default function Dashboard() {
   const { user } = useAuth();
   const portfolioName = user ? `Portfolio de ${user.name}` : "Mi Portfolio";
 
-  // 1) Traemos transacciones
   const {
     transacciones,
     loading: txLoading,
@@ -23,7 +21,6 @@ export default function Dashboard() {
     refresh: refreshTx,
   } = useTransactions();
 
-  // 2) Agrupamos por activo y parseamos strings a números
   const grouped = useMemo(() => {
     type G = { activo: Active; netCantidad: number; netInvertido: number };
     const map = new Map<number, G>();
@@ -50,24 +47,17 @@ export default function Dashboard() {
     return Array.from(map.values()).filter((g) => g.netCantidad !== 0);
   }, [transacciones]);
 
-
-  // 3) Precios y cambios cada 10s (no afecta al agrupamiento)
   const symbols = grouped.map((g) => g.activo.simbolo);
   const { data: marketData = {} } = useMarketData(symbols);
 
-  // 4a) Cost Basis: suma de todas las compras
   const costBasis = useMemo(
     () =>
       transacciones
         .filter((t) => t.tipo_operacion === "compra")
-        .reduce(
-          (sum, t) => sum + Number(t.cantidad_invertida ?? 0),
-          0
-        ),
+        .reduce((sum, t) => sum + Number(t.cantidad_invertida ?? 0), 0),
     [transacciones]
   );
 
-  // 4b) Calculamos beneficio y % por activo
   const assetsWithBenefit = useMemo(
     () =>
       grouped.map((g) => {
@@ -81,22 +71,17 @@ export default function Dashboard() {
         const percent = g.netInvertido
           ? (benefit / g.netInvertido) * 100
           : 0;
-        return { ...g, benefit, percent };
+        return { simbolo: g.activo.simbolo, benefit, percent };
       }),
     [grouped, marketData]
   );
 
-  // 4c) Balance total y % global
   const balanceTotal = useMemo(
-    () =>
-      assetsWithBenefit.reduce((sum, a) => sum + a.benefit, 0),
+    () => assetsWithBenefit.reduce((sum, a) => sum + a.benefit, 0),
     [assetsWithBenefit]
   );
-  const balancePercent = costBasis
-    ? (balanceTotal / costBasis) * 100
-    : 0;
+  const balancePercent = costBasis ? (balanceTotal / costBasis) * 100 : 0;
 
-  // 4d) Mejor activo
   const best = useMemo(() => {
     if (assetsWithBenefit.length === 0) return null;
     return assetsWithBenefit.reduce((prev, curr) =>
@@ -104,7 +89,6 @@ export default function Dashboard() {
     );
   }, [assetsWithBenefit]);
 
-  // 4e) Beneficio realizado
   const realizedProfit = useMemo(
     () =>
       transacciones
@@ -117,8 +101,6 @@ export default function Dashboard() {
     [transacciones]
   );
 
-
-  // 5) Modales y callbacks
   const [showSearch, setShowSearch] = useState(false);
   const [modalAsset, setModalAsset] = useState<Active | null>(null);
 
@@ -136,27 +118,31 @@ export default function Dashboard() {
     setModalAsset(a);
   }, []);
 
+  const pieChartData = grouped.map((g) => ({
+    simbolo: g.activo.simbolo,
+    valor: marketData[g.activo.simbolo]?.price * g.netCantidad || 0,
+  }));
+
   return (
     <main className="w-full pt-32 px-6 bg-gray-100 dark:bg-gray-900 min-h-screen">
-      {/* Cabecera + Resumen + Botones */}
       <div className="max-w-5xl mx-auto">
-        <section className="flex items-center my-8">
+        <section className="flex items-center my-8 gap-4">
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             {portfolioName}
           </h1>
         </section>
 
         <div className="flex flex-wrap gap-6 mb-8 items-center text-center">
-          <Resume title="Coste Total" amount={costBasis} />
+          <Resume title="Total Invertido" amount={costBasis} />
           {best && (
             <Resume
               title="Mejor Activo"
-              subtitle={best.activo.simbolo}
+              subtitle={best.simbolo}
               amount={best.benefit}
             />
           )}
-          <Resume title="Ganancia Total" amount={balanceTotal} percent={balancePercent} />
-          <Resume title="Ganancias realizadas" amount={realizedProfit} />
+          <Resume title="Ganancias Potenciales" amount={balanceTotal} percent={balancePercent} />
+          <Resume title="Ingresos por ventas" amount={realizedProfit} />
         </div>
 
         <div className="my-20 flex justify-between items-center">
@@ -167,13 +153,12 @@ export default function Dashboard() {
             <PlusCircleIcon className="w-9 h-9" />
             <span className="text-xl font-medium">Añade Activo</span>
           </button>
-          <Button text="Ir a Fiscalidad" onClick={() => (window.location.href = "/tax")} />
         </div>
       </div>
 
-      {/* Tabla: ocupa más ancho y fuera del contenedor restringido */}
-      <section className="w-full px-24 text-gray-900 dark:text-white">
 
+
+      <section className="w-full px-24 text-gray-900 dark:text-white">
         <CriptoTable
           transacciones={transacciones}
           marketData={marketData}
@@ -182,7 +167,6 @@ export default function Dashboard() {
           onAddTransaction={onAddTransaction}
         />
 
-        {/* Modales */}
         {showSearch && (
           <SearchAssetModal onSelect={handleSelectAsset} onClose={handleCloseSearch} />
         )}
@@ -196,5 +180,4 @@ export default function Dashboard() {
       </section>
     </main>
   );
-
 }

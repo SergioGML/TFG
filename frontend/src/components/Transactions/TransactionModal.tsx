@@ -85,17 +85,16 @@ export default function TransactionModal({ activo, onSuccess, onClose }: Transac
                     ✕
                 </button>
                 <h2 className="text-xl font-semibold mb-2">
-                    Agregar transacción <span className="text-gray-500 text-base">
+                    Agregar transacción <span className="text-gray-600 dark:text-white text-base">
                         — {activo.nombre} ({activo.simbolo})
                     </span>
                 </h2>
-                <div className="flex border-b mb-4">
+                <div className="flex border-b my-8">
                     {(["compra", "venta"] as const).map((t) => (
                         <button
                             key={t}
                             onClick={() => setTipo(t)}
-                            className={`flex-1 py-2 text-center ${tipo === t ? "border-b-2 border-rose-400 font-semibold" : "text-gray-500"
-                                }`}
+                            className="cursor-pointer flex-1 py-2 text-center text-xl dark:text-amber-50 hover:bg-gray-100  hover:dark:bg-blue-200"
                         >
                             {t === "compra" ? "Comprar" : "Vender"}
                         </button>

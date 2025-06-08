@@ -35,7 +35,7 @@ export default function SearchAssetModal({
                     ✕
                 </button>
 
-                <h2 className="text-xl font-semibold mb-4">Seleccionar criptomoneda</h2>
+                <h2 className="text-2xl font-semibold mb-4">Seleccionar criptomoneda</h2>
 
                 <Input
                     type="text"
@@ -50,16 +50,16 @@ export default function SearchAssetModal({
 
                 <ul className="max-h-60 overflow-y-auto">
                     {!loading && activos.length === 0 && (
-                        <li className="py-2 text-gray-500">No se encontraron activos</li>
+                        <li className="py-2 text-white text-2xl">No se encontraron activos</li>
                     )}
                     {activos.map((a) => (
                         <li
                             key={a.id}
                             onClick={() => onSelect(a)}
-                            className="flex justify-between py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-700 rounded cursor-pointer"
+                            className="flex justify-between py-2 px-4 hover:bg-gray-100 dark:hover:bg-amber-400 rounded cursor-pointer"
                         >
-                            <span className="font-medium">{a.nombre}</span>
-                            <span className="text-gray-500 uppercase">{a.simbolo}</span>
+                            <span className="text-xl">{a.nombre}</span>
+                            <span className="text-white text-xl uppercase">{a.simbolo}</span>
                         </li>
                     ))}
                 </ul>
