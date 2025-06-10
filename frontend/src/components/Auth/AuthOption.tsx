@@ -18,12 +18,11 @@ const AuthOption: React.FC<AuthOptionProps> = ({ label, active, onClick }) => {
         }
       }}
       className={`rounded-2xl px-4 py-2 text-2xl font-semibold text-center transition-colors cursor-pointer
-        ${
-          active
-            ? "text-violet-800 dark:text-white"
-            : "text-violet-800 opacity-50 hover:opacity-100 dark:text-white"
+        ${active
+          ? "text-amber-800 dark:text-white"
+          : "text-amber-800 opacity-50 hover:opacity-100 dark:text-white"
         }
-        hover:text-rose-500 hover:dark:text-amber-300`}
+        hover:text-red-500 hover:dark:text-amber-300`}
     >
       {label}
     </div>

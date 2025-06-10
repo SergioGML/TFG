@@ -18,7 +18,7 @@ const Button: React.FC<ButtonProps> = ({
   const colors =
     variant === "danger"
       ? "bg-red-500 hover:bg-red-700 text-white"
-      : "bg-rose-400 hover:bg-rose-600 text-white dark:bg-amber-500 dark:hover:bg-amber-400";
+      : "bg-red-400 hover:bg-red-600 text-white dark:bg-amber-500 dark:hover:bg-amber-400";
 
   return (
     <button type={type} onClick={onClick} className={`${base} ${colors}`}>

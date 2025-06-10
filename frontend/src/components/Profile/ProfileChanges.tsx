@@ -20,7 +20,7 @@ const ProfileChanges: React.FC<ProfileChangesProps> = ({
     <div className="flex items-center justify-between">
       <div>
         <p className="font-medium text-gray-800 dark:text-white text-2xl">{label}</p>
-        <p className="text-gray-800 dark:text-rose-500 text-2xl">{value}</p>
+        <p className="text-gray-800 dark:text-red-500 text-2xl">{value}</p>
       </div>
       <Button
         text={buttonText}

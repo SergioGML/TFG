@@ -22,65 +22,66 @@ export default function Profile() {
   }
 
   return (
-    <div className="w-full text-xl text-slate-800 dark:text-slate-200">
+    <div className="w-full text-xl text-gray-800 dark:text-gray-200">
       {/* Saludo */}
       <Hi />
+      <section className="flex">
+        {/* Sección Datos personales */}
+        <section className="w-full h-[1050px] items-center content-center bg-white dark:bg-blue-950/80 pt-2">
+          <SectionContainer borderColor="border-amber-400 dark:border-red-600">
+            <h2 className="text-3xl font-semibold text-amber-400 dark:text-white mb-8">
+              Datos personales
+            </h2>
+            <div className="space-y-6 text-lg">
+              <ProfileChanges
+                label="Nombre de usuario"
+                value={user.name}
+                buttonText="Modificar nombre"
+                onClick={() => setModalType("name")}
+              />
+              <ProfileChanges
+                label="Email"
+                value={user.email}
+                buttonText="Modificar email"
+                onClick={() => setModalType("email")}
+              />
+              <ProfileChanges
+                label="Contraseña"
+                value="********"
+                buttonText="Modificar contraseña"
+                onClick={() => setModalType("password")}
+              />
+              <ProfileChanges
+                label="País de residencia"
+                value={
+                  user.pais_id === 1
+                    ? "España"
+                    : user.pais_id === 2
+                      ? "Andorra"
+                      : "Sin asignar"
+                }
+                buttonText="Modificar país"
+                onClick={() => setModalType("country")}
+              />
+            </div>
+          </SectionContainer>
+        </section>
+        {/* Sección Eliminar cuenta */}
+        <section className="w-full items-center content-center bg-white dark:bg-blue-950/80 pb-6">
+          <SectionContainer borderColor="border-red-500">
+            <h2 className="text-3xl font-semibold text-red-500 mb-8">
+              Eliminar cuenta
+            </h2>
+            <ProfileChanges
+              label="¿Quieres eliminar tu cuenta?"
+              value={""}
+              buttonText="Eliminar cuenta"
+              variant="danger"
+              onClick={() => setModalType("delete")}
+            />
+          </SectionContainer>
+        </section>
 
-      {/* Sección Datos personales */}
-      <section className="w-full h-[650px] bg-white dark:bg-blue-950/80 pt-20">
-        <SectionContainer borderColor="border-amber-400 dark:border-rose-600">
-          <h2 className="text-3xl font-semibold text-amber-400 dark:text-white mb-8">
-            Datos personales
-          </h2>
-          <div className="space-y-6 text-lg">
-            <ProfileChanges
-              label="Nombre de usuario"
-              value={user.name}
-              buttonText="Modificar nombre"
-              onClick={() => setModalType("name")}
-            />
-            <ProfileChanges
-              label="Email"
-              value={user.email}
-              buttonText="Modificar email"
-              onClick={() => setModalType("email")}
-            />
-            <ProfileChanges
-              label="Contraseña"
-              value="********"
-              buttonText="Modificar contraseña"
-              onClick={() => setModalType("password")}
-            />
-            <ProfileChanges
-              label="País de residencia"
-              value={
-                user.pais_id === 1
-                  ? "España"
-                  : user.pais_id === 2
-                    ? "Andorra"
-                    : "Sin asignar"
-              }
-              buttonText="Modificar país"
-              onClick={() => setModalType("country")}
-            />
-          </div>
-        </SectionContainer>
-      </section>
-
-      {/* Sección Eliminar cuenta */}
-      <section className="w-full bg-white dark:bg-blue-950/80 py-6">
-        <SectionContainer borderColor="border-red-500">
-          <h2 className="text-3xl font-semibold text-red-500 mb-8">
-            Eliminar cuenta
-          </h2>
-          <ProfileChanges
-            label="¿Quieres eliminar tu cuenta?"
-            value={""}
-            buttonText="Eliminar cuenta"
-            variant="danger"
-            onClick={() => setModalType("delete")}
-          />
-        </SectionContainer>
       </section>
 
       {/* Overlay y Modal genérico */}

@@ -111,7 +111,7 @@ export default function LoginForm() {
       <p className="text-center mt-5 text-sm">
         <Link
           to="/NewPassword"
-          className="text-rose-500 hover:underline dark:text-yellow-300 dark:hover:text-yellow-200 text-[1.1rem]"
+          className="text-red-500 hover:underline dark:text-yellow-300 dark:hover:text-yellow-200 text-[1.1rem]"
         >
           ¿Has olvidado tu contraseña?
         </Link>

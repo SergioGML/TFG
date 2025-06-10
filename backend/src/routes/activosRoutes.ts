@@ -1,4 +1,3 @@
-// src/routes/activosRoutes.ts
 import { Router } from "express";
 import { verifyToken } from "../middleware/authMiddleware";
 import {

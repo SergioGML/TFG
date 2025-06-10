@@ -9,7 +9,7 @@ const Hi: React.FC = () => {
 
 
   return (
-    <div className="w-full bg-gray-100 dark:bg-rose-600/80 shadow-lg py-6 gap-6 flex flex-col items-center">
+    <div className="w-full bg-gray-100 dark:bg-indigo-800 shadow-lg py-6 gap-6 flex flex-col items-center">
       <h1 className="text-4xl font-semibold text-gray-900 dark:text-white pt-20">
         ¡Hola! {user!.name}
       </h1>

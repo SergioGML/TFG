@@ -151,7 +151,7 @@ export default function Dashboard() {
             className="flex items-center gap-2 text-amber-500 hover:text-amber-600 mb-4"
           >
             <PlusCircleIcon className="w-9 h-9" />
-            <span className="text-xl font-medium">Añade Activo</span>
+            <span className="text-xl font-medium cursor-pointer">Añade Activo</span>
           </button>
         </div>
       </div>

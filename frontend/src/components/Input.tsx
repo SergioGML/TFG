@@ -49,7 +49,7 @@ const Input: React.FC<InputProps> = ({
               ? "border-red-500 focus:ring-red-500"
               : "border-indigo-300 focus:ring-amber-400"
             }
-            bg-white dark:bg-blue-900 text-violet-800 dark:text-white
+            bg-white dark:bg-blue-900 text-amber-800 dark:text-white
             focus:outline-none focus:ring-2 transition-colors
           `}
         />

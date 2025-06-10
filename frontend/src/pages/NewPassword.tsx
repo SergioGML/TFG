@@ -1,4 +1,3 @@
-// src/pages/NewPassword.tsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -20,11 +19,9 @@ export default function NewPassword() {
   const navigate = useNavigate();
   const [step, setStep] = useState<typeof EMAIL | typeof RESET>(EMAIL);
 
-  // Paso EMAIL
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
 
-  // Paso RESET
   const [newPwd, setNewPwd] = useState("");
   const [repeatPwd, setRepeatPwd] = useState("");
   const [pwdError, setPwdError] = useState("");
@@ -175,7 +172,7 @@ export default function NewPassword() {
         <p className="text-center text-base mt-2">
           <Link
             to="/"
-            className="text-rose-500 hover:underline dark:text-yellow-300"
+            className="text-red-500 hover:underline dark:text-yellow-300"
           >
             <ChevronDoubleLeftIcon className="w-4 h-4 inline-block mr-1" />
             Volver al Login

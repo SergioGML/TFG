@@ -53,7 +53,7 @@ export default function Country() {
       />
 
       {!country && (
-        <div className="flex items-center justify-center gap-2 text-slate-800 dark:text-slate-200 mt-10 mb-10">
+        <div className="flex items-center justify-center gap-2 text-gray-800 dark:text-gray-200 mt-10 mb-10">
           <ExclamationCircleIcon className="w-5 h-5" />
           <span>Selecciona un país del menú desplegable</span>
         </div>

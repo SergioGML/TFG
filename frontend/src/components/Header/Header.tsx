@@ -17,11 +17,11 @@ function Header() {
 
   return (
     <header
-      className="w-full h-20 px-4 flex absolute items-center justify-between
-     bg-white dark:bg-blue-950/80 shadow-inner dark:shadow-gray-500/20 border-t dark:border-gray-700"
+      className="w-full h-20 px-4 flex fixed items-center justify-between
+     bg-white dark:bg-blue-950 dark:text-white shadow-inner dark:shadow-gray-500/20 border-t dark:border-gray-700"
     >
       <div className="flex items-center gap-4 cursor-pointer" onClick={handleLogoClick} role="button" tabIndex={0} >
-        <CurrencyEuroIcon className="w-9 h-9 text-slate-800 dark:text-slate-200" />
+        <CurrencyEuroIcon className="w-9 h-9 text-gray-800 dark:text-gray-200" />
         <span className="text-2xl" >Crypto Wallet</span>
       </div>
 

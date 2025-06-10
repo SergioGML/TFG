@@ -1,4 +1,3 @@
-// src/controllers/activosController.ts
 import { Request, Response } from "express";
 import { Activo } from "../models/Activo";
 import {
@@ -48,7 +47,7 @@ export const agregarActivo = async (req: Request, res: Response) => {
   }
 
   try {
-    // Verificamos primero si existe por coinmarketcap_id o simbolo
+    // Verifico primero si existe por coinmarketcap_id o simbolo
     const existente = await Activo.findOne({
       where: {
         coinmarketcap_id,
@@ -59,7 +58,7 @@ export const agregarActivo = async (req: Request, res: Response) => {
       return res.status(200).json(existente);
     }
 
-    // Insertamos solo si no existe
+    // Insertado solo si no existe
     const nuevo = await Activo.create({ simbolo, nombre, coinmarketcap_id });
     return res.status(201).json(nuevo);
   } catch (e) {

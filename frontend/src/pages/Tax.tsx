@@ -103,7 +103,7 @@ export default function Tax() {
         <main className="w-full pt-8 px-6 md:px-20 bg-gray-100 dark:bg-gray-800 min-h-screen">
             <section className="flex flex-col md:flex-row bg-amber-gray-50 dark:bg-gray-900 rounded-2xl shadow-2xl dark:text-white mb-8 text gap-8 justify-around p-12 mt-24">
                 <section className="w-full md:w-1/2">
-                    <h4 className="text-4xl font-semibold mb-10 text-rose-500 dark:text-rose-400">Ten en cuenta...</h4>
+                    <h4 className="text-4xl font-semibold mb-10 text-red-500 dark:text-red-400">Ten en cuenta...</h4>
                     <p className="text-2xl mb-4 text-start">
                         En esta sección, puedes ver un resumen de tus obligaciones fiscales relacionadas con criptomonedas.
                     </p>
@@ -117,10 +117,11 @@ export default function Tax() {
                         </ul>
                     </p>
                     <Resume title="Tasa impositiva actual" taxPercent={tasaActual} />
-                    <div className="my-18 w-fit text-2xl border-2 border-rose-500 dark:border-rose-400 p-8 rounded-lg">
-                        <h3 className="text-4xl font-semibold my-6 text-rose-500 dark:text-rose-400">¿Otras ganancias?</h3>
+                    <div className="my-18 w-fit text-2xl border-2 border-red-500 dark:border-red-400 p-8 rounded-lg">
+                        <h3 className="text-4xl font-semibold my-6 text-red-500 dark:text-red-400">¿Otras ganancias?</h3>
                         <p className="mb-10">
-                            <strong>Introduce aquí otras ganancias no cripto:</strong>
+                            <strong>Introduce aquí otras ganancias no proventientes <br />
+                                de las criptomonedas: (simulador)</strong>
                         </p>
                         <Input
                             type="number"
