@@ -1,4 +1,3 @@
-// backend/src/routes/transaccionesRoutes.ts
 import { Router } from "express";
 import { check } from "express-validator";
 import {

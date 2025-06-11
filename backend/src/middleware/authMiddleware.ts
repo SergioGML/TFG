@@ -4,7 +4,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const verifyToken = (req: Request, res: Response, next: NextFunction) => {
+export const verifyToken = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   const token = req.header("Authorization")?.split(" ")[1];
 
   if (!token) {

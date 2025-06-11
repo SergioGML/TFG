@@ -1,4 +1,3 @@
-// src/hooks/useActives.ts
 import { useState, useEffect, useCallback } from "react";
 import type { Active } from "../types";
 import { API_URL } from "../config/api";

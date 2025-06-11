@@ -1,4 +1,3 @@
-// backend/src/index.ts  (o server.ts, según se llame tu entrypoint)
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
