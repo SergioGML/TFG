@@ -6,21 +6,23 @@ import ChooseMenu from "../ChooseMenu";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
+// Componente para seleccionar el país del usuario
 export default function Country() {
   const [country, setCountry] = useState("");
   const [error, setError] = useState("");
   const { token } = useAuth();
   const navigate = useNavigate();
-
+  // Lista de países disponibles
   const countries = [
     { label: "España", value: "1" },
     { label: "Andorra", value: "2" },
   ];
-
+  //Función para manejar la actualización del país seleccionado
   const handleUpdateCountry = async () => {
     setError("");
 
     try {
+      //Menejar errores al seleccionar país
       const res = await fetch("http://localhost:5000/api/auth/profile", {
         method: "PUT",
         headers: {
@@ -45,26 +47,27 @@ export default function Country() {
 
   return (
     <div>
+      {/*Compoonente Menú para elegir país*/}
       <ChooseMenu
         items={countries}
         selectedItem={country}
         onSelect={setCountry}
         placeholder="Selecciona un país"
       />
-
+      {/* Mensaje para seleccionar un país */}
       {!country && (
         <div className="flex items-center justify-center gap-2 text-gray-800 dark:text-gray-200 mt-10 mb-10">
           <ExclamationCircleIcon className="w-5 h-5" />
           <span>Selecciona un país del menú desplegable</span>
         </div>
       )}
-
+      {/* Información sobre la tributación de criptomonedas en España */}
       {country === "1" && (
         <div className="my-4">
           <Info text="En España, las ganancias por criptomonedas tributan como ganancias patrimoniales en el IRPF. Los tramos actuales son: 19% hasta 6.000 €, 21% entre 6.000 € y 50.000 €, 23% hasta 200.000 € y 27% a partir de ahí." />
         </div>
       )}
-
+      {/* Información sobre la tributación de criptomonedas en Andorra */}
       {country === "2" && (
         <div className="my-4">
           <Info text="En Andorra, las ganancias por criptomonedas tributan como ganancias de capital. Se aplica una tasa fija del 10%, con una exención de los primeros 3.000 € anuales. No existe impuesto al patrimonio ni a las herencias." />

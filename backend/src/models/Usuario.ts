@@ -1,8 +1,22 @@
-import { Table, Column, Model, DataType, ForeignKey, BelongsTo } from "sequelize-typescript";
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  ForeignKey,
+  BelongsTo,
+} from "sequelize-typescript";
 import { Pais } from "./Pais";
 
 @Table({ tableName: "usuarios", timestamps: false })
 export class User extends Model {
+  // Definición de las columnas del modelo User
+  // - id: número entero autoincremental, clave primaria
+  // - name: cadena de texto, no nula
+  // - email: cadena de texto, no nula, única
+  // - password: cadena de texto, no nula
+  // - pais_id: número entero, clave foránea que referencia al modelo Pais, puede ser nulo
+  // - pais: relación uno a uno con el modelo Pais
   @Column({ primaryKey: true, autoIncrement: true })
   id!: number;
 

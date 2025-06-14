@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import Button from '../Button';
 import { useNavigate } from "react-router-dom";
 
+//Componente para mostrar el saludo al usuario en el perfil
 const Hi: React.FC = () => {
   const { user } = useAuth();
   const navigate = useNavigate();

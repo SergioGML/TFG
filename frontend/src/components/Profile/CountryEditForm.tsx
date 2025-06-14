@@ -1,4 +1,3 @@
-// src/components/Profile/CountryEditForm.tsx
 import React, { useState } from "react";
 import ChooseMenu from "../ChooseMenu";
 import Button from "../Button";
@@ -9,6 +8,7 @@ interface Props {
     onClose: () => void;
 }
 
+// Componente para editar el país del usuario en su perfil
 const CountryEditForm: React.FC<Props> = ({ onClose }) => {
     const { user, token, login } = useAuth();
     const [country, setCountry] = useState<string>(
@@ -20,7 +20,7 @@ const CountryEditForm: React.FC<Props> = ({ onClose }) => {
         { label: "España", value: "1" },
         { label: "Andorra", value: "2" },
     ];
-
+    // Lista de países disponibles para seleccionar
     const handleSave = async () => {
         if (!country) {
             setError("Selecciona un país");
@@ -41,7 +41,7 @@ const CountryEditForm: React.FC<Props> = ({ onClose }) => {
             if (!res.ok) throw new Error(data.message);
 
             toast.success(data.message);
-            // refrescar perfil
+            // Refrescar perfil
             await login(token!);
             onClose();
         } catch (err: any) {
@@ -55,7 +55,7 @@ const CountryEditForm: React.FC<Props> = ({ onClose }) => {
             <p className="text-center text-gray-500">
                 Selecciona tu país de residencia.
             </p>
-
+            {            /* Componente para seleccionar el país */}
             <ChooseMenu
                 items={items}
                 selectedItem={country}
@@ -67,7 +67,7 @@ const CountryEditForm: React.FC<Props> = ({ onClose }) => {
             />
 
             {error && <p className="text-red-500 text-sm">{error}</p>}
-
+            {            /* Botones para cancelar o guardar cambios */}
             <div className="flex justify-center gap-4">
                 <Button text="Cancelar" variant="default" onClick={onClose} />
                 <Button text="Guardar país" onClick={handleSave} />

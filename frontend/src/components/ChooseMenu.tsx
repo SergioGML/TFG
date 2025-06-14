@@ -13,6 +13,7 @@ interface ChooseMenuProps {
   placeholder?: string;
 }
 
+// Componente de menú desplegable para seleccionar una opción
 function ChooseMenu({
   items,
   selectedItem,
@@ -20,9 +21,9 @@ function ChooseMenu({
   placeholder = "Selecciona una opción",
 }: ChooseMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
-
+  // Estado para controlar si el menú está abierto o cerrado
   const toggleMenu = () => setIsOpen(!isOpen);
-
+  // Maneja el evento de clic para abrir/cerrar el menú
   const handleKeyDown = (
     e: KeyboardEvent<HTMLDivElement>,
     callback: () => void

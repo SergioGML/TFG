@@ -5,7 +5,7 @@ import {
   searchAssets,
   obtenerPrecioCripto,
 } from "../services/coinMarketCapServices";
-
+//// Controlador para manejar las operaciones relacionadas con los activos
 export const listarTopActivos = async (_req: Request, res: Response) => {
   try {
     const list = await getTopAssets(8);
@@ -15,7 +15,7 @@ export const listarTopActivos = async (_req: Request, res: Response) => {
     return res.status(500).json({ msg: "Error en el servidor" });
   }
 };
-
+// Controlador para buscar activos por nombre o símbolo
 export const buscarActivos = async (req: Request, res: Response) => {
   const q = String(req.query.q || "").trim();
   if (!q)
@@ -28,7 +28,7 @@ export const buscarActivos = async (req: Request, res: Response) => {
     return res.status(500).json({ msg: "Error en el servidor" });
   }
 };
-
+// Controlador para listar todos los activos almacenados en la base de datos
 export const listarActivos = async (_req: Request, res: Response) => {
   try {
     const activos = await Activo.findAll();
@@ -38,7 +38,7 @@ export const listarActivos = async (_req: Request, res: Response) => {
     return res.status(500).json({ msg: "Error en el servidor" });
   }
 };
-
+// Controlador para agregar un nuevo activo a la base de datos
 export const agregarActivo = async (req: Request, res: Response) => {
   const { simbolo, nombre, coinmarketcap_id } = req.body;
 
@@ -66,7 +66,7 @@ export const agregarActivo = async (req: Request, res: Response) => {
     return res.status(500).json({ msg: "Error en el servidor" });
   }
 };
-
+// Controlador para obtener el precio de una criptomoneda por su símbolo
 export const obtenerPrecio = async (req: Request, res: Response) => {
   const sym = String(req.params.simbolo || "").toUpperCase();
   if (!sym)

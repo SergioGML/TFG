@@ -12,7 +12,7 @@ interface InputProps {
   pattern?: string;
   className?: string;
 }
-
+//Componente de Input reutilizable que soporte iconos y validación
 const Input: React.FC<InputProps> = ({
   type,
   placeholder,

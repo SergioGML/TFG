@@ -9,6 +9,7 @@ interface SearchAssetModalProps {
     onClose: () => void;
 }
 
+// Componente para buscar y seleccionar un activo (criptomoneda)
 export default function SearchAssetModal({
     onSelect,
     onClose,

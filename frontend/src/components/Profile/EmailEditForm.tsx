@@ -9,6 +9,7 @@ interface Props {
   onClose: () => void;
 }
 
+//Componente para editar el email del usuario
 const EmailEditForm: React.FC<Props> = ({ onClose }) => {
   const { token, login } = useAuth();
   const [currentPwd, setCurrentPwd] = useState("");
@@ -22,7 +23,7 @@ const EmailEditForm: React.FC<Props> = ({ onClose }) => {
       return;
     }
     setErrPwd("");
-
+    // Validación de contraseña (mínimo 6 caracteres)
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!re.test(newEmail)) {
       setErrEmail("Email no válido");

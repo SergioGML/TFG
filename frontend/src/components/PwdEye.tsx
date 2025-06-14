@@ -9,7 +9,7 @@ interface PwdEyeProps {
     error?: string;
     placeholder?: string;
 }
-
+// Componente para mostrar un input de contraseña con un botón para ver/ocultar la contraseña
 const PwdEye: React.FC<PwdEyeProps> = ({
     value,
     onChange,
@@ -17,11 +17,11 @@ const PwdEye: React.FC<PwdEyeProps> = ({
     error,
     placeholder = "Contraseña",
 }) => {
+    // Estado para controlar si la contraseña se muestra o no
     const [show, setShow] = useState(false);
     const type = show ? "text" : "password";
 
     return (
-        // Sólo la altura del input (h-12 = 3rem = 48px)
         <div className="relative w-full h-12">
             <Input
                 type={type}
@@ -31,7 +31,6 @@ const PwdEye: React.FC<PwdEyeProps> = ({
                 onBlur={onBlur}
                 error={error}
                 required
-                // Le damos altura fija para que el wrapper la siga
                 className="h-12 pr-10"
             />
             <button
@@ -39,6 +38,7 @@ const PwdEye: React.FC<PwdEyeProps> = ({
                 onClick={() => setShow((s) => !s)}
                 className="absolute right-3 top-1/2 transform -trangray-y-1/2 text-gray-400"
             >
+                {/* Icono para mostrar/ocultar la contraseña */}
                 {show ? (
                     <EyeSlashIcon className="w-5 h-5" />
                 ) : (

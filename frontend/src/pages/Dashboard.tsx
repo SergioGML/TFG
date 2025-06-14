@@ -10,6 +10,13 @@ import Resume from "../components/Dashboard/Resume";
 
 import type { Active } from "../types";
 
+/* Página principal del Dashboard.
+   Muestra un resumen de las transacciones y activos del usuario.
+   Permite añadir nuevos activos y ver un resumen de las ganancias.
+   Utiliza hooks personalizados para manejar la lógica de negocio.
+   Incluye componentes para mostrar tablas y modales de transacciones.
+   Requiere autenticación del usuario.
+ */
 export default function Dashboard() {
   const { user } = useAuth();
   const portfolioName = user ? `Portfolio de ${user.name}` : "Mi Portfolio";
@@ -21,6 +28,8 @@ export default function Dashboard() {
     refresh: refreshTx,
   } = useTransactions();
 
+  // Agrupa las transacciones por activo y calcula la cantidad neta y el total invertido
+  // Utiliza useMemo para optimizar el rendimiento y evitar cálculos innecesarios
   const grouped = useMemo(() => {
     type G = { activo: Active; netCantidad: number; netInvertido: number };
     const map = new Map<number, G>();
@@ -32,7 +41,8 @@ export default function Dashboard() {
         netCantidad: 0,
         netInvertido: 0,
       };
-
+      // Si el activo no existe en el mapa, lo inicializa
+      // Actualiza la cantidad neta y el total invertido
       if (tx.tipo_operacion === "compra") {
         g.netCantidad += Number(tx.cantidad_comprada ?? 0);
         g.netInvertido += Number(tx.cantidad_invertida ?? 0);
@@ -49,7 +59,9 @@ export default function Dashboard() {
 
   const symbols = grouped.map((g) => g.activo.simbolo);
   const { data: marketData = {} } = useMarketData(symbols);
-
+  // Obtiene los datos del mercado para los símbolos de los activos agrupados
+  // Calcula el costo base total de las transacciones de compra
+  // Utiliza useMemo para optimizar el rendimiento y evitar cálculos innecesarios
   const costBasis = useMemo(
     () =>
       transacciones
@@ -75,20 +87,22 @@ export default function Dashboard() {
       }),
     [grouped, marketData]
   );
-
+  // Filtra los activos con beneficio y calcula el total de beneficios y el porcentaje
   const balanceTotal = useMemo(
     () => assetsWithBenefit.reduce((sum, a) => sum + a.benefit, 0),
     [assetsWithBenefit]
   );
   const balancePercent = costBasis ? (balanceTotal / costBasis) * 100 : 0;
-
+  // Utiliza useMemo para optimizar el rendimiento y evitar cálculos innecesarios
+  // Encuentra el mejor activo con mayor beneficio
+  // Si no hay activos con beneficio, devuelve null
   const best = useMemo(() => {
     if (assetsWithBenefit.length === 0) return null;
     return assetsWithBenefit.reduce((prev, curr) =>
       curr.benefit > prev.benefit ? curr : prev
     );
   }, [assetsWithBenefit]);
-
+  // Calcula las ganancias realizadas totales de las transacciones de venta
   const realizedProfit = useMemo(
     () =>
       transacciones
@@ -100,10 +114,10 @@ export default function Dashboard() {
         }, 0),
     [transacciones]
   );
-
+  // Utiliza useState para manejar el estado de los modales y la búsqueda de activos
   const [showSearch, setShowSearch] = useState(false);
   const [modalAsset, setModalAsset] = useState<Active | null>(null);
-
+  // Funciones para manejar la selección de activos, cierre de modales y éxito de transacciones
   const handleSelectAsset = useCallback((a: Active) => {
     setModalAsset(a);
     setShowSearch(false);
@@ -117,7 +131,7 @@ export default function Dashboard() {
   const onAddTransaction = useCallback((a: Active) => {
     setModalAsset(a);
   }, []);
-
+  // Utiliza useCallback para evitar recrear funciones en cada renderizado
   const pieChartData = grouped.map((g) => ({
     simbolo: g.activo.simbolo,
     valor: marketData[g.activo.simbolo]?.price * g.netCantidad || 0,
@@ -131,7 +145,7 @@ export default function Dashboard() {
             {portfolioName}
           </h1>
         </section>
-
+        {/* Resumen de la cartera */}
         <div className="flex flex-wrap gap-6 mb-8 items-center text-center">
           <Resume title="Total Invertido" amount={costBasis} />
           {best && (
@@ -150,14 +164,13 @@ export default function Dashboard() {
             onClick={() => setShowSearch(true)}
             className="flex items-center gap-2 text-amber-500 hover:text-amber-600 mb-4"
           >
+            {/* Icono de añadir transacción */}
             <PlusCircleIcon className="w-9 h-9" />
             <span className="text-xl font-medium cursor-pointer">Añade Activo</span>
           </button>
         </div>
       </div>
-
-
-
+      {/* Tabla de transacciones */}
       <section className="w-full px-24 text-gray-900 dark:text-white">
         <CriptoTable
           transacciones={transacciones}
@@ -166,7 +179,7 @@ export default function Dashboard() {
           error={txError}
           onAddTransaction={onAddTransaction}
         />
-
+        {/* Modal de búsqueda de activos */}
         {showSearch && (
           <SearchAssetModal onSelect={handleSelectAsset} onClose={handleCloseSearch} />
         )}

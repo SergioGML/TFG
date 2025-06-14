@@ -1,6 +1,8 @@
 import Modal from "../components/Modal";
 import SelectCountry from "../components/SelectCountry/SelectCountry";
 
+/* Esta página permite al usuario seleccionar su país de residencia, lo cual es importante 
+para el cálculo de impuestos y la personalización de la experiencia del usuario.*/
 function Country() {
   return (
     <Modal>

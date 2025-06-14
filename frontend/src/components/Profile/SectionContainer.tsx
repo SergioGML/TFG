@@ -5,6 +5,7 @@ interface SectionContainerProps {
   children: React.ReactNode;
 }
 
+// Componente contenedor para las secciones del perfil
 const SectionContainer: React.FC<SectionContainerProps> = ({
   borderColor,
   children,

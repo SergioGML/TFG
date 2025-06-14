@@ -6,6 +6,7 @@ interface ButtonProps {
   variant?: "default" | "danger";
 }
 
+// Componente de botón reutilizable con soporte para iconos y estilos
 const Button: React.FC<ButtonProps> = ({
   text,
   icon,

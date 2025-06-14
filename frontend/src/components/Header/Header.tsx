@@ -4,11 +4,13 @@ import { useAuth } from "../../context/AuthContext";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
+//Componente de cabecera que muestra el logo, enlaces de navegación y menú de usuario
 function Header() {
   const { user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
+  // Si el usuario hace clic en el logo, lo redirige al dashboard
   const handleLogoClick = () => {
     navigate("/dashboard");
   };
@@ -35,6 +37,7 @@ function Header() {
               {isTaxPage ? "Ir al Dashboard" : "Ir a Fiscalidad"}
             </a>
             <div className="flex items-center gap-4">
+              {/* Si el usuario está autenticado, muestra el menú */}
               <Menu />
             </div>
           </>

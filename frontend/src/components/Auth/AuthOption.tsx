@@ -6,6 +6,7 @@ interface AuthOptionProps {
   onClick: () => void;
 }
 
+// Componente que representa una opción de autenticación (Iniciar sesión o Registrarse).
 const AuthOption: React.FC<AuthOptionProps> = ({ label, active, onClick }) => {
   return (
     <div

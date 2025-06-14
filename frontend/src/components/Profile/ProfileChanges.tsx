@@ -9,6 +9,7 @@ interface ProfileChangesProps {
   variant?: "default" | "danger";
 }
 
+// Componente para mostrar cambios en el perfil
 const ProfileChanges: React.FC<ProfileChangesProps> = ({
   label,
   value,

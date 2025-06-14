@@ -6,6 +6,7 @@ import Resume from "../components/Dashboard/Resume";
 import Input from "../components/Input";
 import Button from "../components/Button";
 
+// Función para calcular el impuesto basado en los tramos fiscales
 function calcularImpuesto(base: number, tramos: TramoFiscalEntry[]): number {
     let impuesto = 0;
     for (const { tramo_min, tramo_max, tasa_impositiva } of tramos) {
@@ -20,13 +21,15 @@ function calcularImpuesto(base: number, tramos: TramoFiscalEntry[]): number {
     return impuesto;
 }
 
+//Página de fiscalidad
+// Muestra un resumen de las obligaciones fiscales relacionadas con criptomonedas
 export default function Tax() {
     const { data: fiscalidad, loading: fxLoading, error: fxError } = useFiscalidad();
     const { transacciones } = useTransactions();
-
     const [otrasGananciasInput, setOtrasGananciasInput] = useState<string>("");
     const [otrasGananciasConfirmadas, setOtrasGananciasConfirmadas] = useState<number>(0);
 
+    //Usamos useMemo para agrupar las transacciones por activo y calcular la cantidad neta y el total invertido
     const grouped = useMemo(() => {
         interface G {
             activoId: number;
@@ -36,6 +39,8 @@ export default function Tax() {
         }
 
         const map = new Map<number, G>();
+        // Iteramos sobre las transacciones y agrupamos por activo
+        // Calculamos la cantidad neta y el total invertido
         transacciones.forEach((tx) => {
             const key = tx.activo.id;
             const existing = map.get(key) || {
@@ -44,15 +49,19 @@ export default function Tax() {
                 netCantidad: 0,
                 netInvertido: 0,
             };
+            // Si el activo no existe en el mapa, lo inicializamos
+            // Actualizamos la cantidad neta y el total invertido según el tipo de operación
+            // Si es una compra, sumamos la cantidad comprada e invertida
 
             if (tx.tipo_operacion === "compra") {
                 existing.netCantidad += Number(tx.cantidad_comprada ?? 0);
                 existing.netInvertido += Number(tx.cantidad_invertida ?? 0);
             } else {
+                // Si es una venta, restamos la cantidad vendida y el importe de la venta
                 existing.netCantidad -= Number(tx.cantidad_vendida ?? 0);
                 existing.netInvertido -= Number(tx.cantidad_vendida ?? 0) * Number(tx.precio_venta ?? 0);
             }
-
+            // Actualizamos el mapa con el activo modificado
             map.set(key, existing);
         });
 
@@ -61,7 +70,10 @@ export default function Tax() {
 
     const symbols = grouped.map((g) => g.simbolo);
     const { data: marketData = {} } = useMarketData(symbols);
-
+    // Obtenemos los datos del mercado para los símbolos de los activos agrupados
+    // Calculamos el balance no realizado, que es la suma de las ganancias no realizadas de cada activo
+    // Ganancias no realizadas = (Precio actual * Cantidad neta) - Invertido
+    // Utilizamos useMemo para optimizar el rendimiento y evitar cálculos innecesarios
     const balanceNoRealizado = useMemo(() => {
         return grouped.reduce((sum, g) => {
             const md = marketData[g.simbolo];
@@ -74,9 +86,10 @@ export default function Tax() {
     }, [grouped, marketData]);
 
     const tramos = fiscalidad?.tramos ?? [];
-
+    // Obtenemos los tramos fiscales del país seleccionado
     const gananciasRealizadas = useMemo(() => {
         const base = transacciones
+            // Filtramos las transacciones de tipo "venta" y calculamos las ganancias realizadas
             .filter((t) => t.tipo_operacion === "venta")
             .reduce((sum, t) => {
                 const cantidad = Number(t.cantidad_vendida ?? 0);
@@ -88,7 +101,7 @@ export default function Tax() {
 
         return base + otrasGananciasConfirmadas;
     }, [transacciones, otrasGananciasConfirmadas]);
-
+    // Calculamos las ganancias realizadas sumando las ganancias de las transacciones de venta y las otras ganancias confirmadas
     const tramoActual = tramos.find(
         (t) =>
             gananciasRealizadas >= t.tramo_min &&

@@ -10,6 +10,19 @@ import { User } from "./Usuario";
 import { Activo } from "./Activo";
 
 @Table({ tableName: "transacciones", timestamps: false })
+// Definición del modelo Transaccion
+// - id: número entero autoincremental, clave primaria
+// - user_id: número entero, clave foránea que referencia al modelo User
+// - activo_id: número entero, clave foránea que referencia al modelo Activo
+// - tipo_operacion: cadena de texto que puede ser "compra" o "venta", no nula
+// - cantidad_invertida: número decimal con 12 dígitos y 2 decimales, puede ser nulo
+// - cantidad_comprada: número decimal con 12 dígitos y 6 decimales, puede ser nulo
+// - precio_compra: número decimal con 12 dígitos y 6 decimales, puede ser nulo
+// - cantidad_vendida: número decimal con 12 dígitos y 6 decimales, puede ser nulo
+// - precio_venta: número decimal con 12 dígitos y 6 decimales, puede ser nulo
+// - precio_promedio_compra: número decimal con 18 dígitos y 10 decimales, puede ser nulo
+// - precio_promedio_venta: número decimal con 18 dígitos y 10 decimales, puede ser nulo
+// - ratio_beneficio: número decimal con 18 dígitos y 10 decimales, puede ser nulo
 export class Transaccion extends Model {
   @Column({ primaryKey: true, autoIncrement: true })
   id!: number;

@@ -8,11 +8,12 @@ interface Props {
   onClose: () => void;
 }
 
+// Componente para editar el nombre del usuario
 const NameEditForm: React.FC<Props> = ({ onClose }) => {
   const { token, login } = useAuth();
   const [name, setName] = useState("");
   const [errName, setErrName] = useState("");
-
+  // Maneja el guardado del nuevo nombre
   const handleSave = async () => {
 
     if (!name.trim()) {
@@ -42,7 +43,7 @@ const NameEditForm: React.FC<Props> = ({ onClose }) => {
   };
 
   return (
-    <div className="flex flex-col gap-8">    
+    <div className="flex flex-col gap-8">
       <h2 className="text-2xl font-bold text-center">Cambia tu nombre</h2>
       <p className="text-center text-gray-500">
         Introduce tu nuevo nombre.

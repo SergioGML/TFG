@@ -10,7 +10,9 @@ import App from "./App";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
+      {/* Proveedor de autenticación que maneja el estado del usuario */}
       <AuthProvider>
+        {/* Componente principal de la aplicación que contiene las rutas y lógica */}
         <App />
         <ToastContainer
           position="top-right"

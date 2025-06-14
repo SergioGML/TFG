@@ -3,11 +3,11 @@ import { useNavigate } from "react-router-dom";
 import {
   Bars4Icon,
   PencilIcon,
-  SparklesIcon,
   ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/react/24/solid";
 import { useAuth } from "../../context/AuthContext";
 
+//Componente de menú que muestra opciones de perfil y cierre de sesión
 function Menu() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
@@ -16,17 +16,17 @@ function Menu() {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
-
+  // Maneja el clic en el icono del menú para abrir o cerrar el menú
   const handleProfileClick = () => {
     navigate("/profile");
     setIsOpen(false);
   };
-
+  // Maneja el clic en la opción de cerrar sesión
   const handleLogout = () => {
     setIsOpen(false);
     logout();
   };
-
+  // Maneja el evento de teclado para permitir la navegación con Enter o Espacio
   const handleKeyDown = (e: React.KeyboardEvent, action: () => void) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();

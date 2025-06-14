@@ -4,6 +4,7 @@ interface BoxContainerProps {
   children: React.ReactNode;
 }
 
+//Componente de modal que muestra contenido centrado en la pantalla
 export default function Modal({ children }: BoxContainerProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">

@@ -15,10 +15,9 @@ interface UseMarketDataResult {
   error: string | null;
 }
 
-/**
- * Hook para obtener datos de mercado (precio + variaciones) de varios símbolos.
- * Refresca cada 10s. Devuelve siempre un objeto (vacío por defecto), nunca null.
- */
+/* Hook para obtener datos de mercado (precio + variaciones) de varios símbolos.
+Refresca cada 10s. Devuelve siempre un objeto (vacío por defecto), nunca null. */
+
 export function useMarketData(symbols: string[]): UseMarketDataResult {
   const { token } = useAuth();
   const [data, setData] = useState<Record<string, MarketDataEntry>>({});
@@ -31,7 +30,8 @@ export function useMarketData(symbols: string[]): UseMarketDataResult {
       return;
     }
     let active = true;
-
+    // Función para obtener los datos de mercado
+    // Esta función se ejecuta inmediatamente y luego cada 10 segundos
     const fetchData = async () => {
       setLoading(true);
       try {
@@ -51,8 +51,9 @@ export function useMarketData(symbols: string[]): UseMarketDataResult {
         if (active) setLoading(false);
       }
     };
-
     fetchData();
+    // Refrescar cada 10 segundos
+    // Si el componente se desmonta, se cancela el intervalo para evitar que se intente actualizar el estado de un componente desmontado
     const iv = window.setInterval(fetchData, 10_000);
     return () => {
       active = false;

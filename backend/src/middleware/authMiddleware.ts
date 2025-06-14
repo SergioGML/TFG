@@ -4,6 +4,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// Middleware para verificar el token JWT y agregar el usuario al request
+// Si el token es válido, se agrega el usuario al request para que esté disponible en las rutas protegidas
 export const verifyToken = (
   req: Request,
   res: Response,

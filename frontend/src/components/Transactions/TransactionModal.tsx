@@ -14,20 +14,21 @@ interface TransactionModalProps {
     onClose: () => void;
 }
 
+// Componente para agregar una transacción de compra o venta de un activo
 export default function TransactionModal({ activo, onSuccess, onClose }: TransactionModalProps) {
     const { token } = useAuth();
     const [tipo, setTipo] = useState<"compra" | "venta">("compra");
     const [cantidad, setCantidad] = useState("");
     const [precio, setPrecio] = useState("");
     const [error, setError] = useState<string | null>(null);
-
+    //Parsea la cantidad y el precio ingresados por el usuario
     const total = parseFloat(cantidad) * parseFloat(precio) || 0;
-
+    // Calcula el total de la transacción (cantidad * precio)
     const handleSubmit = async () => {
         setError(null);
         const cantidadNum = parseFloat(cantidad);
         const precioNum = parseFloat(precio);
-
+        //Si la cantidad o el precio no son números válidos, muestra un error
         if (isNaN(cantidadNum) || isNaN(precioNum)) {
             setError("Introduce valores numéricos válidos");
             return;

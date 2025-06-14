@@ -3,19 +3,19 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+// URLs de la API de CoinMarketCap
 const QUOTE_URL =
   "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest";
 const LISTINGS_URL =
   "https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest";
 
+// Verificar que la variable de entorno CMC_API_KEY está definida
 const API_KEY = process.env.CMC_API_KEY;
 if (!API_KEY) {
   throw new Error("Falta definir CMC_API_KEY en backend/.env");
 }
 
-/**
- * Obtener precio de una sola criptomoneda.
- */
+//Obtener el precio de una criptomoneda por su símbolo
 export async function obtenerPrecioCripto(simbolo: string): Promise<number> {
   const response = await axios.get(QUOTE_URL, {
     headers: { "X-CMC_PRO_API_KEY": API_KEY },
@@ -25,8 +25,8 @@ export async function obtenerPrecioCripto(simbolo: string): Promise<number> {
 }
 
 /**
- * Top N activos por capitalización (para tu modal inicial).
- * Cada activo incluye ahora:
+ * Top N activos por capitalización.
+ * Cada activo incluye
  *   id: coinmarketcap_id,
  *   coinmarketcap_id, simbolo, nombre
  */
@@ -49,10 +49,7 @@ export async function getTopAssets(limit = 8) {
   }));
 }
 
-/**
- * Búsqueda hasta 300 activos por nombre o símbolo.
- * Devuelve los mismos campos que getTopAssets.
- */
+//Búsqueda hasta 300 activos por nombre o símbolo.
 export async function searchAssets(query: string, limit = 300) {
   const res = await axios.get(LISTINGS_URL, {
     headers: { "X-CMC_PRO_API_KEY": API_KEY },
@@ -77,9 +74,7 @@ export async function searchAssets(query: string, limit = 300) {
   }));
 }
 
-/**
- * Obtener precio y variaciones (1h, 24h, 7d) para varios símbolos a la vez.
- */
+//Obtener precio y variaciones (1h, 24h, 7d) para varios símbolos a la vez.
 export async function getMarketData(symbols: string[]): Promise<
   Record<
     string,
@@ -91,10 +86,12 @@ export async function getMarketData(symbols: string[]): Promise<
     }
   >
 > {
+  // Validar que se pasen símbolos
   const response = await axios.get(QUOTE_URL, {
     headers: { "X-CMC_PRO_API_KEY": API_KEY },
     params: { symbol: symbols.join(","), convert: "USD" },
   });
+  // Validar que la respuesta contenga datos
   const data = response.data.data as Record<string, any>;
   const result: Record<string, any> = {};
   symbols.forEach((sym) => {

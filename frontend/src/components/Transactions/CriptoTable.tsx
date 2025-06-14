@@ -17,6 +17,8 @@ interface Props {
     onAddTransaction: (activo: Active) => void;
 }
 
+// Componente para mostrar una tabla de criptomonedas con sus transacciones
+// Muestra una tabla con el rendimiento de las criptomonedas en la cartera del usuario
 function CriptoTableComponent({
     transacciones,
     marketData,
@@ -34,9 +36,11 @@ function CriptoTableComponent({
 
         return Array.from(map.values())
             .map((txs) => {
+                // Agrupa las transacciones por activo y calcula los totales
                 const compras = txs.filter((t) => t.tipo_operacion === "compra");
                 const ventas = txs.filter((t) => t.tipo_operacion === "venta");
 
+                // Si no hay compras ni ventas, no hay nada que mostrar
                 const compradas = compras.reduce(
                     (s, t) => s + Number(t.cantidad_comprada || 0),
                     0
@@ -46,6 +50,7 @@ function CriptoTableComponent({
                     0
                 );
                 const netCantidad = compradas - vendidas;
+                // Si la cantidad neta es 0, no hay nada que mostrar
                 if (netCantidad === 0) return null;
 
                 const invertido = compras.reduce(
@@ -59,6 +64,8 @@ function CriptoTableComponent({
                 );
                 const netInvertido = invertido - obtenido;
 
+                // precio promedio de compra es el promedio de los precios de compra ponderado por la cantidad comprada
+
                 const precioPromedioCompra =
                     compradas > 0
                         ? compras.reduce(
@@ -68,7 +75,7 @@ function CriptoTableComponent({
                             0
                         ) / compras.length
                         : undefined;
-
+                // precio promedio de venta es el promedio de los precios de venta ponderado por la cantidad vendida
                 const precioPromedioVenta =
                     vendidas > 0
                         ? ventas.reduce(
@@ -78,7 +85,7 @@ function CriptoTableComponent({
                             0
                         ) / ventas.length
                         : undefined;
-
+                //Ratio beneficio es el promedio de los ratios de beneficio de las transacciones de venta
                 const ratios = ventas
                     .map((t) => Number(t.ratio_beneficio))
                     .filter((v) => !isNaN(v));

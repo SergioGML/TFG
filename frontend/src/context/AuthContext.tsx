@@ -24,6 +24,7 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+// Proveedor de contexto de autenticación. Sirve para manejar el estado de autenticación del usuario
 export function AuthProvider({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const [token, setToken] = useState<string | null>(() =>
@@ -40,6 +41,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     (async () => {
       try {
+        // Verificar el token y obtener el perfil del usuario
         const res = await fetch("http://localhost:5000/api/auth/profile", {
           method: "GET",
           headers: { Authorization: `Bearer ${token}` },
@@ -58,7 +60,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     })();
   }, [token]);
-
+  // Si hay token, intenta cargar el perfil del usuario
+  // Si no hay token, limpia el estado de usuario
   const login = async (jwt: string) => {
     localStorage.setItem("token", jwt);
     setToken(jwt);
@@ -92,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     </AuthContext.Provider>
   );
 }
-
+// Proporciona el contexto de autenticación a los componentes hijos
 export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
   if (!context) {

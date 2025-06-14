@@ -7,6 +7,7 @@ interface ModalProfileProps {
   children: React.ReactNode;
 }
 
+// Componente para mostrar un modal de perfil
 const ModalProfile: React.FC<ModalProfileProps> = ({
   show,
   onClose,

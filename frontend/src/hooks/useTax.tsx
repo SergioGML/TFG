@@ -18,7 +18,8 @@ interface UseFiscalidadResult {
     loading: boolean;
     error: string | null;
 }
-
+// Hook para obtener la fiscalidad de un país.
+// Devuelve un objeto con los tramos fiscales y la tasa impositiva.
 export function useFiscalidad(): UseFiscalidadResult {
     const { token } = useAuth();
     const [data, setData] = useState<FiscalidadData | null>(null);
@@ -28,7 +29,7 @@ export function useFiscalidad(): UseFiscalidadResult {
     useEffect(() => {
         if (!token) return;
         let active = true;
-
+        // Evita que se actualice el estado si el componente se desmonta
         const fetchFiscalidad = async () => {
             setLoading(true);
             try {
@@ -47,7 +48,7 @@ export function useFiscalidad(): UseFiscalidadResult {
                 if (active) setLoading(false);
             }
         };
-
+        // Llama a la función para obtener los datos de fiscalidad
         fetchFiscalidad();
 
         return () => {

@@ -7,7 +7,7 @@ import { Pais } from "../models/Pais";
 import { TramoFiscal } from "../models/TramoFiscal";
 
 dotenv.config();
-
+// Me aseguro de que las variables de entorno están definidas
 export const sequelize = new Sequelize({
   database: process.env.DB_NAME,
   username: process.env.DB_USER,

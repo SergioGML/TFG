@@ -7,11 +7,13 @@ import {
 import { verifyToken } from "../middleware/authMiddleware";
 
 const router = Router();
-
+// Rutas para manejar transacciones financieras
+// Registrar una nueva transacción
 router.post(
   "/nueva",
   verifyToken,
   [
+    // Validaciones para los campos de la transacción
     check("activo_id")
       .isInt()
       .withMessage("El activo_id debe ser un número entero"),
@@ -35,7 +37,7 @@ router.post(
   ],
   registrarTransaccion
 );
-
+// Obtener todas las transacciones del usuario autenticado
 router.get("/", verifyToken, obtenerTransacciones);
 
 export default router;

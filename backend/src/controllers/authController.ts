@@ -4,16 +4,14 @@ import { Pais } from "../models/Pais";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
-/**
- * Registrar un nuevo usuario
- */
+//Registrar un nuevo usuario
 export const register = async (req: Request, res: Response) => {
   try {
+    // Validar que se reciban los datos obligatorios
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
       return res.status(400).json({ message: "Faltan datos obligatorios" });
     }
-
     const existing = await User.findOne({ where: { email } });
     if (existing) {
       return res.status(400).json({ message: "El usuario ya existe" });
@@ -32,9 +30,7 @@ export const register = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Autenticación (login)
- */
+// Autenticar un usuario y generar un token JWT
 export const login = async (req: Request, res: Response) => {
   try {
     const { email, password } = req.body;
@@ -63,9 +59,7 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Obtener perfil del usuario autenticado
- */
+//Obtener el perfil del usuario autenticado
 export const getProfile = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id;
@@ -83,9 +77,7 @@ export const getProfile = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Actualizar perfil: nombre, email, país o contraseña
- */
+//Actualizar el perfil del usuario autenticado
 export const updateProfile = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id;
@@ -146,9 +138,7 @@ export const updateProfile = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Eliminar cuenta del usuario autenticado
- */
+//Eliminar cuenta del usuario autenticado
 export const deleteProfile = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id;
@@ -160,9 +150,7 @@ export const deleteProfile = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Olvidé mi contraseña: comprueba si el email existe
- */
+// Olvidé mi contraseña: recibe email
 export const forgotPassword = async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
@@ -171,7 +159,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
     const user = await User.findOne({ where: { email } });
     if (!user) return res.status(404).json({ message: "Email no registrado" });
 
-    // Aquí podrías enviar un email con un token, pero de momento:
+    //Mensaje de confirmación
     return res.json({
       message: "Email correcto.",
     });
@@ -181,9 +169,7 @@ export const forgotPassword = async (req: Request, res: Response) => {
   }
 };
 
-/**
- * Resetear contraseña: recibe email + newPassword
- */
+//Resetear contraseña: recibe email y nueva contraseña
 export const resetPassword = async (req: Request, res: Response) => {
   try {
     const { email, newPassword } = req.body;
@@ -195,7 +181,7 @@ export const resetPassword = async (req: Request, res: Response) => {
         .status(400)
         .json({ message: "La contraseña debe tener al menos 6 caracteres" });
     }
-    // opcional: validar fuerza (letra + número/símbolo)
+    //Validar que la nueva contraseña tenga al menos una letra y un número/símbolo
     const pwdRegex = /^(?=.*[A-Za-z])(?=.*[\d\W]).{6,}$/;
     if (!pwdRegex.test(newPassword)) {
       return res.status(400).json({
@@ -203,14 +189,14 @@ export const resetPassword = async (req: Request, res: Response) => {
           "La contraseña debe incluir al menos una letra y un número/símbolo",
       });
     }
-
+    // Verificar que el email esté registrado
     const user = await User.findOne({ where: { email } });
     if (!user) return res.status(404).json({ message: "Email no registrado" });
 
     const salt = await bcrypt.genSalt(10);
     const hashed = await bcrypt.hash(newPassword, salt);
     await user.update({ password: hashed });
-
+    // Mensaje de confirmación
     return res.json({ message: "Contraseña restablecida con éxito" });
   } catch (err) {
     console.error("Error en resetPassword:", err);

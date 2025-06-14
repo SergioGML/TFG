@@ -20,17 +20,17 @@ app.use("/api/activos", activosRoutes);
 app.use("/api/transacciones", transaccionesRoutes);
 app.use("/api/fiscalidad", fiscalidadRoutes);
 
-// Nuevo endpoint para market data
+// Endpoint para market data
 app.use("/api/market-data", marketDataRoutes);
 
-// Sincronizar BD y arrancar servidor
+// Sincronizar BBDD y arrancar servidor
 sequelize
   .sync()
-  .then(() => console.log("✅ Base de datos sincronizada correctamente"))
+  .then(() => console.log("Base de datos sincronizada correctamente"))
   .catch((error) =>
-    console.error("❌ Error al sincronizar la base de datos:", error)
+    console.error("Error al sincronizar la base de datos:", error)
   );
-
+// Puerto del servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en el puerto ${PORT}`);

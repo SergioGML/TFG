@@ -15,7 +15,13 @@ import { toast } from "react-toastify";
 const EMAIL = "email";
 const RESET = "reset";
 
+// Página para restablecer la contraseña.
+
 export default function NewPassword() {
+
+  // Necesita un estado para manejar el paso actual (email o reset)
+  // y otro para manejar los valores del formulario y errores.
+  // Utiliza useState para manejar el estado de los campos del formulario.
   const navigate = useNavigate();
   const [step, setStep] = useState<typeof EMAIL | typeof RESET>(EMAIL);
 
@@ -26,7 +32,7 @@ export default function NewPassword() {
   const [repeatPwd, setRepeatPwd] = useState("");
   const [pwdError, setPwdError] = useState("");
   const [repeatError, setRepeatError] = useState("");
-
+  // Función para validar el email utilizando una expresión regular.
   const validateEmail = (v: string) =>
     /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? "" : "Email no válido";
 
@@ -99,6 +105,7 @@ export default function NewPassword() {
 
   return (
     <Modal>
+      {/* Renderiza un modal con un formulario que cambia según el paso actual.*/}
       <form
         onSubmit={isEmailStep ? handleSendEmail : handleReset}
         className="flex flex-col gap-6"
@@ -116,6 +123,7 @@ export default function NewPassword() {
         </p>
 
         {isEmailStep ? (
+
           <Input
             type="email"
             placeholder="Introduce tu email"
@@ -128,6 +136,7 @@ export default function NewPassword() {
           />
         ) : (
           <>
+            {/* Muestra el texto de los campos de contraseña */}
             <PwdEye
               placeholder="Nueva contraseña"
               value={newPwd}
@@ -156,6 +165,7 @@ export default function NewPassword() {
         )}
 
         <div className="flex flex-col items-center gap-2">
+          {/* Muestra un botón que cambia según el paso actual */}
           <Button
             text={isEmailStep ? "Comprobar email" : "Cambiar contraseña"}
             icon={
@@ -170,6 +180,7 @@ export default function NewPassword() {
         </div>
 
         <p className="text-center text-base mt-2">
+          {/* Muestra un enlace para volver al login */}
           <Link
             to="/"
             className="text-red-500 hover:underline dark:text-yellow-300"

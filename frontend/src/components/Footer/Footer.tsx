@@ -4,6 +4,7 @@ import {
   AcademicCapIcon,
 } from "@heroicons/react/24/solid";
 
+// Componente de pie de página. Proporciona enlaces a GitHub, LinkedIn y correo electrónico.
 function Footer() {
   return (
     <footer

@@ -3,6 +3,7 @@ import { TramoFiscal } from "../models/TramoFiscal";
 import { User } from "../models/Usuario";
 import { Pais } from "../models/Pais";
 
+// Controlador para obtener los tramos fiscales según el país del usuario
 export const obtenerTramosFiscales = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.id;

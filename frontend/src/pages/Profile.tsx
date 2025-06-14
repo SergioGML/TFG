@@ -10,7 +10,8 @@ import PwdEditForm from "../components/Profile/PwdEditForm";
 import CountryEditForm from "../components/Profile/CountryEditForm";
 import DeleteAccountForm from "../components/Profile/DeleteAccountForm";
 
-
+// Página de perfil del usuario.
+// Permite al usuario ver y modificar sus datos personales, como nombre, email, contraseña y país de residencia.
 export default function Profile() {
   const { user } = useAuth();
   const [modalType, setModalType] = useState<
@@ -28,10 +29,12 @@ export default function Profile() {
       <section className="flex">
         {/* Sección Datos personales */}
         <section className="w-full h-[1050px] items-center content-center bg-white dark:bg-blue-950/80 pt-2">
+          {/* Contenedor de la sección */}
           <SectionContainer borderColor="border-amber-400 dark:border-red-600">
             <h2 className="text-3xl font-semibold text-amber-400 dark:text-white mb-8">
               Datos personales
             </h2>
+            {/* Lista de cambios de perfil */}
             <div className="space-y-6 text-lg">
               <ProfileChanges
                 label="Nombre de usuario"

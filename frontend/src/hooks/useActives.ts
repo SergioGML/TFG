@@ -6,18 +6,16 @@ export interface UseActivesResult {
   activos: Active[];
   loading: boolean;
   error: string | null;
-  /**
-   * Si pasas query (string), hace búsqueda hasta 300;
-   * si no, carga top 8.
-   */
   refresh: (query?: string) => void;
 }
-
+// Hook para manejar la lógica de obtención de activos financieros
 export function useActives(): UseActivesResult {
   const [activos, setActivos] = useState<Active[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  // Función para obtener los activos desde la API
+  // Si se pasa un query, busca activos por nombre o símbolo.
+  // Si no se pasa, obtiene los activos más populares.
   const fetchActivos = useCallback(async (query?: string) => {
     setLoading(true);
     setError(null);

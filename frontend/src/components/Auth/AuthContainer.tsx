@@ -4,6 +4,7 @@ import RegisterForm from "./RegisterForm";
 import Modal from "../Modal";
 import AuthOPtion from "./AuthOption";
 
+// Componente principal que maneja el estado de autenticación y muestra el formulario correspondiente.
 const AuthContainer = () => {
   const [isLogin, setIsLogin] = useState(true);
 

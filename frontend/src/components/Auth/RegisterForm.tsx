@@ -10,6 +10,7 @@ import Input from "../Input";
 import PwdEye from "../PwdEye";
 import { useAuth } from "../../context/AuthContext";
 
+// Componente de formulario de registro
 export default function RegisterForm() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -19,33 +20,35 @@ export default function RegisterForm() {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [submitError, setSubmitError] = useState("");
-
+  // Expresión regular para validar la contraseña: al menos 6 caracteres, 1 letra y 1 número/símbolo
   const pwdRegex = /^(?=.*[A-Za-z])(?=.*[\d\W]).{6,}$/;
-
+  // Maneja el cambio de valor en los campos del formulario
   const handleChange = (field: string, value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
-
+  // Valida el email ingresado
   const validateEmail = (value: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(value) ? "" : "Email no válido";
   };
-
+  // Valida la contraseña ingresada
   const validatePassword = (value: string) =>
     pwdRegex.test(value)
       ? ""
       : "La contraseña debe tener 6 caracteres, letra y número";
-
+  // Maneja el blur del campo de nombre
   const handleBlurName = (e: React.FocusEvent<HTMLInputElement>) => {
     setNameError(e.target.value ? "" : "El nombre es obligatorio");
   };
+  // Maneja el blur del campo de email
   const handleBlurEmail = (e: React.FocusEvent<HTMLInputElement>) => {
     setEmailError(validateEmail(e.target.value));
   };
+  // Maneja el blur del campo de contraseña
   const handleBlurPassword = (e: React.FocusEvent<HTMLInputElement>) => {
     setPasswordError(validatePassword(e.target.value));
   };
-
+  // Maneja el envío del formulario de registro
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -98,7 +101,8 @@ export default function RegisterForm() {
 
 
   return (
-    <form onSubmit={handleRegister} className="flex flex-col gap-6">
+    < form onSubmit={handleRegister} className="flex flex-col gap-6" >
+      {/* Formulario de registro */}
       <Input
         type="text"
         placeholder="Tu nombre"

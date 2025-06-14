@@ -18,6 +18,7 @@ function App() {
 
       <main className="flex-grow flex items-center justify-center">
         <Routes>
+          {/* Rutas Públicas, accesibles sin autenticación */}
           <Route path="/" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/newpassword" element={<NewPassword />} />
@@ -25,7 +26,7 @@ function App() {
           <Route path="/transactions/:simbolo" element={<TransactionHistory />} />
 
 
-          {/* Protected routes */}
+          {/* Rutas Protegidas, requieren autenticación para visualizarlas*/}
           <Route
             path="/dashboard"
             element={

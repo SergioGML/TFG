@@ -7,10 +7,11 @@ import { useNavigate } from "react-router-dom";
 
 interface Props { onClose: () => void; }
 
+// Componente para eliminar la cuenta del usuario
 const DeleteAccountForm: React.FC<Props> = ({ onClose }) => {
     const { token, logout } = useAuth();
     const navigate = useNavigate();
-
+    // Maneja la eliminación de la cuenta del usuario
     const handleDelete = async () => {
         try {
             const res = await fetch(
@@ -23,9 +24,11 @@ const DeleteAccountForm: React.FC<Props> = ({ onClose }) => {
                     },
                 }
             );
+            // Si la respuesta no es OK, lanza un error con el mensaje del servidor
             const data = await res.json();
             if (!res.ok) throw new Error(data.message);
 
+            // Si la eliminación es exitosa, muestra un mensaje y redirige al inicio
             toast.success(data.message);
             logout();
             navigate("/");

@@ -1,4 +1,3 @@
-// src/components/LoginForm.tsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserIcon, ArrowRightCircleIcon } from "@heroicons/react/24/solid";
@@ -7,6 +6,7 @@ import Input from "../Input";
 import PwdEye from "../PwdEye";
 import { useAuth } from "../../context/AuthContext";
 
+// Componente de formulario de inicio de sesión
 export default function LoginForm() {
   const { login } = useAuth();
   const navigate = useNavigate();
@@ -16,22 +16,22 @@ export default function LoginForm() {
   const [passwordError, setPasswordError] = useState("");
   const [submitError, setSubmitError] = useState("");
 
-  // Regex: al menos 6 caracteres, 1 letra y 1 número/símbolo
+  // Al menos 6 caracteres, 1 letra y 1 número/símbolo
   const pwdRegex = /^(?=.*[A-Za-z])(?=.*[\d\W]).{6,}$/;
 
   const handleChange = (field: "email" | "password", value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
-
+  // Validación de email
   const validateEmail = (value: string) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(value) ? "" : "Email no válido";
   };
-
+  // Manejo del blur para validar email
   const handleBlurEmail = (e: React.FocusEvent<HTMLInputElement>) => {
     setEmailError(validateEmail(e.target.value));
   };
-
+  // Manejo del blur para validar contraseña
   const handleBlurPassword = (e: React.FocusEvent<HTMLInputElement>) => {
     const v = e.target.value;
     setPasswordError(
@@ -40,7 +40,7 @@ export default function LoginForm() {
         : "Contraseña Incorrecta"
     );
   };
-
+  // Manejo del envío del formulario
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -55,6 +55,7 @@ export default function LoginForm() {
     if (mailErr || passErr) return;
 
     setSubmitError("");
+    //Manejo de errores de envío
     try {
       const res = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
@@ -75,6 +76,7 @@ export default function LoginForm() {
 
   return (
     <>
+      {/* Título del formulario de inicio de sesión */}
       <form onSubmit={handleLogin} className="flex flex-col gap-4">
         <Input
           type="email"

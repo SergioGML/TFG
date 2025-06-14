@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 interface Props { onClose: () => void; }
 
+// Componente para editar la contraseña del usuario
 const PwdEditForm: React.FC<Props> = ({ onClose }) => {
   const { token, login } = useAuth();
   const [currentPwd, setCurrentPwd] = useState("");
@@ -16,23 +17,24 @@ const PwdEditForm: React.FC<Props> = ({ onClose }) => {
   const [errRepeat, setErrRepeat] = useState("");
 
   const handleSave = async () => {
-    // validaciones
+    // Si el campo de contraseña actual está vacío, muestra un error
     if (!currentPwd) {
       setErrCurrent("Obligatorio");
       return;
     }
     setErrCurrent("");
-
+    //Si la contraseña actual no tiene al menos 6 caracteres, muestra un error
     if (newPwd.length < 6) {
       setErrNew("Debe tener al menos 6 caracteres");
       return;
     }
+    //Si la nueva contraseña no contiene al menos una letra y un número/símbolo, muestra un error
     if (!/[A-Za-z]/.test(newPwd) || !/[0-9\W]/.test(newPwd)) {
       setErrNew("Debe incluir al menos una letra y un número/símbolo");
       return;
     }
     setErrNew("");
-
+    //Si el campo de repetir contraseña está vacío o no coincide con la nueva contraseña, muestra un error
     if (repeatPwd !== newPwd) {
       setErrRepeat("No coinciden");
       return;

@@ -7,6 +7,7 @@ import { Op } from "sequelize";
 // Obtener todas las transacciones del usuario autenticado
 export const obtenerTransacciones = async (req: Request, res: Response) => {
   try {
+    //Transacciones del usuario autenticado
     const transacciones = await Transaccion.findAll({
       where: { user_id: (req as any).user.id },
       include: [{ model: Activo }],
@@ -23,6 +24,7 @@ export const obtenerTransacciones = async (req: Request, res: Response) => {
 // Registrar una nueva transacción (compra o venta)
 export const registrarTransaccion = async (req: Request, res: Response) => {
   const errors = validationResult(req);
+  //Si hay errores de validación, devolverlos
   if (!errors.isEmpty()) {
     return res.status(400).json({ errores: errors.array() });
   }
@@ -39,25 +41,26 @@ export const registrarTransaccion = async (req: Request, res: Response) => {
       cantidad_vendida,
       precio_venta,
     } = req.body;
-
+    // Validar campos obligatorios
     if (!["compra", "venta"].includes(tipo_operacion)) {
       return res
         .status(400)
         .json({ msg: "tipo_operacion debe ser 'compra' o 'venta'" });
     }
-
+    // Validar que al menos uno de los campos activo_id, simbolo o nombre esté presente
     if (tipo_operacion === "compra") {
       if (
         cantidad_invertida == null ||
         cantidad_comprada == null ||
         precio_compra == null
       ) {
+        // Si es una compra, validar que se envíen los campos obligatorios
         return res.status(400).json({
           msg: "Faltan campos obligatorios para una operación de compra: cantidad_invertida, cantidad_comprada, precio_compra",
         });
       }
     }
-
+    // Validar que si es una venta, se envíen los campos obligatorios
     if (tipo_operacion === "venta") {
       if (cantidad_vendida == null || precio_venta == null) {
         return res.status(400).json({
@@ -66,8 +69,9 @@ export const registrarTransaccion = async (req: Request, res: Response) => {
       }
     }
 
-    // Buscar el activo por CMC ID o símbolo
+    // Buscar el activo por CoinMarketCap ID o símbolo
     let activo = await Activo.findOne({
+      // Buscar activo por ID o símbolo
       where: {
         [Op.or]: [{ coinmarketcap_id: activo_id }, { simbolo }],
       },
@@ -86,10 +90,10 @@ export const registrarTransaccion = async (req: Request, res: Response) => {
         nombre,
       });
     }
-
+    // Validar que el activo pertenece al usuario autenticado
     let precio_promedio_compra: number | undefined = undefined;
     let ratio_beneficio: number | undefined = undefined;
-
+    // Si es una compra, calcular el precio promedio de compra y el ratio de beneficio
     if (tipo_operacion === "venta") {
       const compras = await Transaccion.findAll({
         where: {
@@ -100,7 +104,7 @@ export const registrarTransaccion = async (req: Request, res: Response) => {
           precio_compra: { [Op.not]: null },
         },
       });
-
+      // Si no hay compras previas, no se puede calcular el precio promedio ni el ratio
       const totalComprado = compras.reduce(
         (acc, t) => acc + Number(t.cantidad_comprada),
         0
@@ -117,7 +121,7 @@ export const registrarTransaccion = async (req: Request, res: Response) => {
           precio_promedio_compra;
       }
     }
-
+    // Crear la nueva transacción
     const nuevaTransaccion = await Transaccion.create({
       user_id: (req as any).user.id,
       activo_id: activo.id,
@@ -130,7 +134,7 @@ export const registrarTransaccion = async (req: Request, res: Response) => {
       precio_promedio_compra,
       ratio_beneficio,
     });
-
+    //Mensaje de éxito
     return res
       .status(201)
       .json({ msg: "Transacción registrada", transaccion: nuevaTransaccion });

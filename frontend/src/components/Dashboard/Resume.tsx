@@ -6,6 +6,7 @@ interface ResumeProps {
   taxPercent?: number;
 }
 
+// Componente de resumen para mostrar información financiera. Son las tarjetas que aparecen en el dashboard o en la página de fiscalidad.
 export default function Resume({
   title,
   amount,
@@ -18,7 +19,8 @@ export default function Resume({
   const hasTaxPercent = typeof taxPercent === "number";
   const isPositive = (percent ?? 0) >= 0;
 
-  // Formateadores
+  // Formateadores de números para mostrar en el formato adecuado
+  // Formatea números a moneda y porcentaje según la configuración regional española (es-ES)
   const fmtCurrency = (v: number) =>
     v.toLocaleString("es-ES", {
       style: "currency",
@@ -46,7 +48,7 @@ export default function Resume({
         </p>
       )}
 
-      {/* Amount */}
+      {/* Cantidad */}
       {hasAmount && (
         <p className="text-2xl font-semibold text-gray-800 dark:text-white">
           {fmtCurrency(amount!)}
